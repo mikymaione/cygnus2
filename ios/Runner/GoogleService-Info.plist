@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAbz4XbTlIGz2bPR5CqXwTz1vIH9PjqpEs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>507128159118</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>it.maionemiky.cygnus2</string>
+	<key>PROJECT_ID</key>
+	<string>cygnus2-social</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cygnus2-social.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:507128159118:ios:5442e63bdb4a2e6c6062df</string>
+</dict>
+</plist>

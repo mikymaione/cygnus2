@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "507128159118",
+    "project_id": "cygnus2-social",
+    "storage_bucket": "cygnus2-social.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507128159118:android:50a2782b267fcf686062df",
+        "android_client_info": {
+          "package_name": "it.maionemiky.cygnus2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsxouw0XBah4PkhgIv_fxxRpuWGBN2L6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
