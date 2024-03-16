@@ -8,35 +8,47 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class BaseStore {
-  Future<void> delete(FirebaseTables table, String idFirebase) => FirebaseFirestore.instance
-      .collection(
-        table.name,
-      )
-      .doc(idFirebase)
-      .delete();
+  Future<void> delete(FirebaseTables table, String idFirebase) => delete2(
+        FirebaseFirestore.instance.collection(table.name),
+        idFirebase,
+      );
 
-  Future<String> save(FirebaseTables table, String? idFirebase, Map<String, dynamic> json, {bool merge = false}) async {
-    final collection = table.name;
+  Future<void> delete2(CollectionReference collection, String idFirebase) => collection.doc(idFirebase).delete();
+
+  Future<String> save(FirebaseTables table, String? idFirebase, Map<String, dynamic> json, {bool merge = false}) {
+    final tableName = table.name;
+    final collection = FirebaseFirestore.instance.collection(tableName);
+
+    return save2(
+      collection,
+      idFirebase,
+      json,
+      merge: merge,
+    );
+  }
+
+  Future<String> save2(CollectionReference collection, String? idFirebase, Map<String, dynamic> json, {bool merge = false}) async {
+    final collectionName = collection.id;
+
     if (kDebugMode) {
-      print('Firestore Adding in "$collection": $json');
+      print('Firestore Adding in "$collectionName": $json');
     }
 
     try {
       if (idFirebase == null) {
-        final R = await FirebaseFirestore.instance.collection(collection).add(json);
+        final R = await collection.add(json);
 
         if (kDebugMode) {
-          print('Firestore Add in "$collection": $json');
+          print('Firestore Add in "$collectionName": $json');
         }
 
         return R.id;
       } else {
-        await FirebaseFirestore.instance
-            .collection(collection)
+        await collection
             .doc(
               idFirebase,
             )
@@ -46,7 +58,7 @@ abstract class BaseStore {
             );
 
         if (kDebugMode) {
-          print('Firestore Set in "$collection": $json');
+          print('Firestore Set in "$collectionName": $json');
         }
 
         return idFirebase;

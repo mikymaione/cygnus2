@@ -10,7 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_push_notifications.dart';
 import 'package:cygnus2/ui/chats/chats.dart';
-import 'package:cygnus2/ui/mad/mad_crud.dart';
+import 'package:cygnus2/ui/mad/mad_container.dart';
 import 'package:cygnus2/ui/mad/mad_filter.dart';
 import 'package:cygnus2/ui/mad/mad_list.dart';
 import 'package:cygnus2/ui/profile/settings.dart';
@@ -132,11 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Chats(myProfile: widget.myProfile),
 
               // my profile
-              MadCrud(
+              MadContainer(
                 myProfile: widget.myProfile,
                 readOnly: false,
                 showSendMsgButton: false,
-                mad: null,
               ),
 
               // Stats

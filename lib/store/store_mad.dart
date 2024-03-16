@@ -16,7 +16,10 @@ import 'package:cygnus2/utility/commons.dart';
 
 class StoreMad extends BaseStore {
   //
-  Future<void> deleteMad(String idFirebase) => delete(FirebaseTables.myself, idFirebase);
+  Future<void> deleteMad(String idFirebase) => delete(
+        FirebaseTables.myself,
+        idFirebase,
+      );
 
   Future<String> saveMad(MadData m) => save(
         FirebaseTables.myself,
@@ -24,17 +27,15 @@ class StoreMad extends BaseStore {
         m.toJson(),
       );
 
-  Stream<Iterable<MadData>> getMad(String personId) {
+  Stream<MadData?> getMad(String personId) {
     return FirebaseFirestore.instance
         .collection(
           FirebaseTables.myself.name,
         )
-        .limit(1)
+        .doc(personId)
         .snapshots()
         .map(
-          (ref) => ref.docs.map(
-            (json) => MadData.fromJson(json.id, json.data()),
-          ),
+          (json) => MadData.fromNullableJson(json.id, json.data()),
         );
   }
 

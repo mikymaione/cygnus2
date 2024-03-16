@@ -103,7 +103,7 @@ class StoreStats extends BaseStore {
         .get();
 
     return ref.docs.map(
-      (json) => MadData.fromJson(json.id, json.data()).updated,
+      (json) => MadData.fromJson(json.id, json.data()).created,
     );
   }
 

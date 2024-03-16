@@ -31,6 +31,8 @@ dependencies:
   flutter_markdown: ^0.6.21
   flutter_profile_picture: ^2.0.0
   json_annotation: ^4.8.1
+  image: ^4.1.7
+  image_picker: ^1.0.7
   intl: ^0.18.1
   package_info_plus: ^4.2.0
   recase: ^4.1.0

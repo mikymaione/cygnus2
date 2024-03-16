@@ -87,12 +87,14 @@ class _TextEditorState extends State<TextEditor> {
               inputFormatters: widget.inputFormatters,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Il campo ${widget.label} è obbligatorio';
+                  if (widget.required) {
+                    return 'Il campo ${widget.label} è obbligatorio';
+                  }
                 } else if (value.length < widget.minLength) {
                   return 'La lunghezza minima è di ${widget.minLength} caratteri';
-                } else {
-                  return widget.validator?.call(value);
                 }
+
+                return widget.validator?.call(value);
               },
               decoration: widget.obscureText
                   ? InputDecoration(

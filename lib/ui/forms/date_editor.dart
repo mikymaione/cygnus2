@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 class DateEditor extends StatefulWidget {
   final GenericController<DateTime> controller;
   final String label, languageCode;
-  final bool readOnly;
+  final bool readOnly, required;
   final DateTime minValue, maxValue;
 
   const DateEditor({
@@ -23,6 +23,7 @@ class DateEditor extends StatefulWidget {
     required this.languageCode,
     required this.label,
     required this.readOnly,
+    required this.required,
     required this.minValue,
     required this.maxValue,
   });
@@ -56,7 +57,6 @@ class _DateEditorState extends State<DateEditor> {
   @override
   void dispose() {
     c1.dispose();
-
     super.dispose();
   }
 
@@ -67,7 +67,7 @@ class _DateEditorState extends State<DateEditor> {
       children: [
         // title
         Text(
-          widget.label,
+          widget.label + (widget.required ? ' (obbligatorio)' : ''),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -78,6 +78,15 @@ class _DateEditorState extends State<DateEditor> {
         TextFormField(
           controller: c1,
           readOnly: true,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              if (widget.required) {
+                return 'Il campo ${widget.label} è obbligatorio';
+              }
+            }
+
+            return null;
+          },
           onTap: widget.readOnly
               ? null
               : () async {

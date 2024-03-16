@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:age_calculator/age_calculator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:cygnus2/data_structures/base_data.dart';
 import 'package:cygnus2/ui/mad/city.dart';
@@ -21,20 +22,17 @@ class MadData {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
   String? idFirebase;
 
-  final DateTime updated;
+  final DateTime created;
 
   final String personId;
 
-  final String nickname;
+  @TimestampConverter()
   final DateTime birthday;
-  final String? bio;
 
+  final String nickname;
+  final String? bio;
   final String university;
   final String department;
-
-  // bse64
-  final String img1;
-  final String? img2, img3, img4, img5, img6;
 
   final Set<String> whereCityName; // ['Alpignano', 'Barbania']
   final Set<String> whereProvince; // ['Napoli', 'Torino']
@@ -73,25 +71,21 @@ class MadData {
 
   MadData({
     required this.idFirebase,
-    required this.updated,
+    required this.created,
     required this.personId,
     required this.nickname,
     required this.birthday,
     this.bio,
     required this.university,
     required this.department,
-    required this.img1,
-    this.img2,
-    this.img3,
-    this.img4,
-    this.img5,
-    this.img6,
     required this.whereCityName,
     required this.whereProvince,
     required this.whereProvinceCitiesName,
   });
 
   Map<String, dynamic> toJson() => _$MadDataToJson(this);
+
+  static MadData? fromNullableJson(String idFirebase, Map<String, dynamic>? json) => json == null ? null : MadData.fromJson(idFirebase, json);
 
   factory MadData.fromJson(String idFirebase, Map<String, dynamic> json) => BaseData.fromJson<MadData>(
         idFirebase,

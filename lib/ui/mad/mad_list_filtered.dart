@@ -62,7 +62,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
   List<MadData> sortMads(Iterable<MadData>? mads) => mads == null
       ? List<MadData>.empty(growable: false)
       : mads.sorted(
-          (a, b) => a.updated.compareTo(b.updated),
+          (a, b) => a.created.compareTo(b.created),
         );
 
   @override

@@ -7,13 +7,31 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-enum FirebaseTables {
-  profile,
-  myself,
-  image,
-  chat,
-  message,
-  blocked,
-  tokens,
-  stats,
+import 'package:flutter/material.dart';
+
+class LoadingOverlay {
+  final BuildContext context;
+
+  const LoadingOverlay({
+    required this.context,
+  });
+
+  void hide() => Navigator.of(context).pop();
+
+  Future<void> show() => showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Container(
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.hourglass_top,
+              size: 200,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      );
 }
