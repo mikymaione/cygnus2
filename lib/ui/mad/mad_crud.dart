@@ -13,26 +13,66 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/date_editor.dart';
-import 'package:cygnus2/ui/forms/image_selector.dart';
 import 'package:cygnus2/ui/forms/province_or_city_form.dart';
 import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/ui/mad/city_dao.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
-import 'package:cygnus2/utility/loading_overlay.dart';
 import 'package:flutter/material.dart';
+
+class MadCrudEditor extends StatefulWidget {
+  final bool readOnly, showSendMsgButton;
+  final MyData myProfile;
+
+  const MadCrudEditor({
+    super.key,
+    required this.readOnly,
+    required this.showSendMsgButton,
+    required this.myProfile,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _MadCrudEditorState();
+}
+
+class _MadCrudEditorState extends State<MadCrudEditor> {
+  final storeMad = StoreMad();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<bool>(
+      stream: storeMad.madExists(widget.myProfile.profileData.idFirebase),
+      builder: (context, snapExists) => snapExists.data == true
+          ? StreamBuilder<MadData?>(
+              stream: storeMad.getMad(widget.myProfile.profileData.idFirebase),
+              builder: (context, snapMad) => snapMad.hasData && snapMad.requireData != null
+                  ? MadCrud(
+                      readOnly: widget.readOnly,
+                      showSendMsgButton: widget.showSendMsgButton,
+                      myProfile: widget.myProfile,
+                      mad: snapMad.requireData,
+                    )
+                  : Container(),
+            )
+          : MadCrud(
+              readOnly: widget.readOnly,
+              showSendMsgButton: widget.showSendMsgButton,
+              myProfile: widget.myProfile,
+              mad: null,
+            ),
+    );
+  }
+}
 
 class MadCrud extends StatefulWidget {
   final bool readOnly, showSendMsgButton;
   final MyData myProfile;
-  final MadData mad;
-  final List<ImageData> images;
+  final MadData? mad;
 
   const MadCrud({
     super.key,
     required this.readOnly,
     required this.showSendMsgButton,
     required this.myProfile,
-    required this.images,
     required this.mad,
   });
 
@@ -60,15 +100,15 @@ class _MadCrudState extends State<MadCrud> {
   void initState() {
     super.initState();
 
-    cNickname.text = widget.mad.nickname;
-    cBirthday.value = widget.mad.birthday;
-    cBio.text = widget.mad.bio ?? '';
+    cNickname.text = widget.mad?.nickname ?? '';
+    cBirthday.value = widget.mad?.birthday;
+    cBio.text = widget.mad?.bio ?? '';
 
-    cUniversity.text = widget.mad.university;
-    cDepartment.text = widget.mad.department;
+    cUniversity.text = widget.mad?.university ?? '';
+    cDepartment.text = widget.mad?.department ?? '';
 
-    cCityNames.value = widget.mad.whereCityName;
-    cProvinces.value = widget.mad.whereProvince;
+    cCityNames.value = widget.mad?.whereCityName;
+    cProvinces.value = widget.mad?.whereProvince;
   }
 
   @override
@@ -91,9 +131,6 @@ class _MadCrudState extends State<MadCrud> {
 
   Future<void> save() async {
     if (formKey.currentState!.validate()) {
-      final overlay = LoadingOverlay(context: context);
-      overlay.show();
-
       try {
         // add all city in a province
         final whereProvinceCitiesName = {
@@ -123,15 +160,10 @@ class _MadCrudState extends State<MadCrud> {
         final storeMad = StoreMad();
         m.idFirebase = await storeMad.saveMad(m);
 
-        overlay.hide();
-
         if (mounted) {
-          Navigator.pop(context);
           Msg.showOk(context, 'Salvato!');
         }
       } catch (e) {
-        overlay.hide();
-
         if (mounted) {
           Msg.showError(context, e);
         }
@@ -152,24 +184,6 @@ class _MadCrudState extends State<MadCrud> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // images
-          for (var y = 0; y < 2; y++) ...[
-            Row(
-              children: [
-                for (var x = y * 3; x < 3 + (y * 3); x++) ...[
-                  Expanded(
-                    child: ImageSelector(
-                      idFirebaseMad: widget.myProfile.profileData.idFirebase,
-                      imageData: x < widget.images.length ? widget.images[x] : null,
-                      index: x,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
-          const SizedBox(height: 8),
-
           // Nickname
           TextEditor(
             label: 'Nickname',

@@ -27,6 +27,24 @@ class StoreMad extends BaseStore {
         m.toJson(),
       );
 
+  Stream<bool> madExists(String personId) {
+    return FirebaseFirestore.instance
+        .collection(
+          FirebaseTables.myself.name,
+        )
+        .where(
+          'personId',
+          isEqualTo: personId,
+        )
+        .snapshots()
+        .handleError(
+          (e) => Commons.printIfInDebug('Error in "madExists": $e'),
+        )
+        .map(
+          (json) => json.docs.isNotEmpty,
+        );
+  }
+
   Stream<MadData?> getMad(String personId) {
     return FirebaseFirestore.instance
         .collection(
@@ -34,6 +52,9 @@ class StoreMad extends BaseStore {
         )
         .doc(personId)
         .snapshots()
+        .handleError(
+          (e) => Commons.printIfInDebug('Error in "getMad": $e'),
+        )
         .map(
           (json) => MadData.fromNullableJson(json.id, json.data()),
         );

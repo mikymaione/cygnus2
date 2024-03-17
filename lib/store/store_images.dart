@@ -56,7 +56,7 @@ class StoreImages extends BaseStore {
         merge: true,
       );
 
-  Stream<Iterable<ImageData>> getImages(String? idFirebaseMad) {
+  Stream<List<ImageData>> getImages(String? idFirebaseMad) {
     return FirebaseFirestore.instance
         .collection(
           FirebaseTables.myself.name,
@@ -72,9 +72,11 @@ class StoreImages extends BaseStore {
           (e) => Commons.printIfInDebug('Error in "getImages": $e'),
         )
         .map(
-          (ref) => ref.docs.map(
-            (json) => ImageData.fromJson(json.id, json.data()),
-          ),
+          (ref) => ref.docs
+              .map(
+                (json) => ImageData.fromJson(json.id, json.data()),
+              )
+              .toList(),
         );
   }
 }
