@@ -36,7 +36,8 @@ class MadCard extends StatefulWidget {
 }
 
 class _MadCardState extends State<MadCard> {
-  Future<void> messageWith(BuildContext context) async {
+  //
+  Future<void> messageWith() async {
     final store = StoreMessages();
 
     final existingChat = await store.findChat(widget.myProfile.profileData.idFirebase, widget.mad.personId);
@@ -67,6 +68,7 @@ class _MadCardState extends State<MadCard> {
       );
 
       chatsData.idFirebase = await store.saveChat(chatsData);
+
       if (mounted) {
         Commons.navigate(
           context: context,
@@ -89,7 +91,7 @@ class _MadCardState extends State<MadCard> {
     }
   }
 
-  Future<void> askToContact(BuildContext context) async {
+  Future<void> askToContact() async {
     if (userIsBlocked) {
       await Msg.say(
         context: context,
@@ -104,9 +106,7 @@ class _MadCardState extends State<MadCard> {
       );
 
       if (ok) {
-        if (mounted) {
-          await messageWith(context);
-        }
+        await messageWith();
       }
     }
   }
@@ -119,7 +119,7 @@ class _MadCardState extends State<MadCard> {
       child: InkWell(
         onTap: () async {
           if (widget.onTap == null) {
-            await askToContact(context);
+            await askToContact();
           } else {
             widget.onTap!.call();
           }
