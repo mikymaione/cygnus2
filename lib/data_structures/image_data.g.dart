@@ -8,6 +8,7 @@ part of 'image_data.dart';
 
 ImageData _$ImageDataFromJson(Map<String, dynamic> json) => ImageData(
       idFirebase: json['idFirebase'] as String?,
+      order: json['order'] as int,
       base64Image: json['base64Image'] as String,
     );
 
@@ -22,5 +23,6 @@ Map<String, dynamic> _$ImageDataToJson(ImageData instance) {
 
   writeNotNull('idFirebase', BaseData.toNull(instance.idFirebase));
   val['base64Image'] = instance.base64Image;
+  val['order'] = instance.order;
   return val;
 }

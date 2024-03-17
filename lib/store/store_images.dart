@@ -40,6 +40,22 @@ class StoreImages extends BaseStore {
         i.toJson(),
       );
 
+  Future<String> updateOrder(String idFirebaseMad, String idFirebase, int o) => save2(
+        FirebaseFirestore.instance
+            .collection(
+              FirebaseTables.myself.name,
+            )
+            .doc(idFirebaseMad)
+            .collection(
+              FirebaseTables.image.name,
+            ),
+        idFirebase,
+        {
+          'order': o,
+        },
+        merge: true,
+      );
+
   Stream<Iterable<ImageData>> getImages(String? idFirebaseMad) {
     return FirebaseFirestore.instance
         .collection(
@@ -49,6 +65,7 @@ class StoreImages extends BaseStore {
         .collection(
           FirebaseTables.image.name,
         )
+        .orderBy('order')
         .limit(6)
         .snapshots()
         .handleError(

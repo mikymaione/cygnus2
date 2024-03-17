@@ -18,9 +18,11 @@ class ImageData {
   String? idFirebase;
 
   final String base64Image;
+  int order;
 
   ImageData({
     required this.idFirebase,
+    required this.order,
     required this.base64Image,
   });
 

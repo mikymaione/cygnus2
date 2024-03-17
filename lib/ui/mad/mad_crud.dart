@@ -161,6 +161,7 @@ class _MadCrudState extends State<MadCrud> {
                     child: ImageSelector(
                       idFirebaseMad: widget.myProfile.profileData.idFirebase,
                       imageData: x < widget.images.length ? widget.images[x] : null,
+                      index: x,
                     ),
                   ),
                 ],

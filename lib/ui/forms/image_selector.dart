@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/store/store_images.dart';
 import 'package:cygnus2/ui/base/msg.dart';
+import 'package:cygnus2/ui/forms/image_controls.dart';
 import 'package:cygnus2/utility/loading_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,13 @@ import 'package:image_picker/image_picker.dart';
 class ImageSelector extends StatefulWidget {
   final String idFirebaseMad;
   final ImageData? imageData;
+  final int index;
 
   const ImageSelector({
     super.key,
     required this.idFirebaseMad,
     required this.imageData,
+    required this.index,
   });
 
   @override
@@ -87,6 +90,7 @@ class _ImageSelectorState extends State<ImageSelector> {
           final i = ImageData(
             idFirebase: widget.imageData?.idFirebase,
             base64Image: base64Image,
+            order: widget.index,
           );
 
           await storeImages.saveImage(widget.idFirebaseMad, i);
@@ -133,28 +137,22 @@ class _ImageSelectorState extends State<ImageSelector> {
         margin: const EdgeInsets.all(8),
         child: Stack(
           children: [
-            if (bytes == null) ...[
-              IconButton(
-                icon: const Icon(
-                  Icons.add_a_photo,
-                ),
-                onPressed: () => select(),
-              ),
-            ] else ...[
+            // image
+            if (bytes != null) ...[
               Center(
                 child: Image.memory(
                   bytes,
                   fit: BoxFit.cover,
                 ),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                onPressed: () => remove(),
-              ),
             ],
+
+            // controls
+            ImageControls(
+              thereIsFile: bytes != null,
+              onAdd: () => select(),
+              onDelete: () => remove(),
+            ),
           ],
         ),
       ),
