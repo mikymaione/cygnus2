@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Commons {
-  static printIfInDebug(String s) {
+  static printIfInDebug(Object? s) {
     if (kDebugMode) {
       print(s);
     }

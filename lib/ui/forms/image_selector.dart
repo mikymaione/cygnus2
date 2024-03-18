@@ -13,6 +13,7 @@ import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/store/store_images.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/image_controls.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/loading_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -113,9 +114,7 @@ class _ImageSelectorState extends State<ImageSelector> {
         return base64Decode(widget.imageData!.base64Image);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      Commons.printIfInDebug(e);
     }
 
     return null;

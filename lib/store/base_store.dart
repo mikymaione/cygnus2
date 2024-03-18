@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cygnus2/utility/commons.dart';
 
 abstract class BaseStore {
   Future<void> delete(FirebaseTables table, String idFirebase) => delete2(
@@ -34,17 +34,13 @@ abstract class BaseStore {
   Future<String> save2(CollectionReference collection, String? idFirebase, Map<String, dynamic> json, {bool merge = false}) async {
     final collectionName = collection.id;
 
-    if (kDebugMode) {
-      print('Firestore Adding in "$collectionName": $json');
-    }
+    Commons.printIfInDebug('Firestore Adding in "$collectionName": $json');
 
     try {
       if (idFirebase == null) {
         final R = await collection.add(json);
 
-        if (kDebugMode) {
-          print('Firestore Add in "$collectionName": $json');
-        }
+        Commons.printIfInDebug('Firestore Add in "$collectionName": $json');
 
         return R.id;
       } else {
@@ -57,16 +53,13 @@ abstract class BaseStore {
               SetOptions(merge: merge),
             );
 
-        if (kDebugMode) {
-          print('Firestore Set in "$collectionName": $json');
-        }
+        Commons.printIfInDebug('Firestore Set in "$collectionName": $json');
 
         return idFirebase;
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Firestore Save Error: $e');
-      }
+      Commons.printIfInDebug('Firestore Save Error: $e');
+
       rethrow;
     }
   }

@@ -63,9 +63,7 @@ class StorePushNotifications extends BaseStore {
 
           case AuthorizationStatus.authorized:
           case AuthorizationStatus.provisional:
-            if (kDebugMode) {
-              print('Push Notification, user granted permission: ${settings.authorizationStatus}');
-            }
+            Commons.printIfInDebug('Push Notification, user granted permission: ${settings.authorizationStatus}');
 
             final newToken = await FirebaseMessaging.instance.getToken();
 

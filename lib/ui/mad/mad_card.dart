@@ -17,7 +17,6 @@ import 'package:cygnus2/ui/mad/icon_chip.dart';
 import 'package:cygnus2/ui/mad/my_profile_picture.dart';
 import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/utility.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class MadCard extends StatefulWidget {
@@ -44,9 +43,7 @@ class _MadCardState extends State<MadCard> {
 
     final existingChat = await store.findChat(widget.myProfile.profileData.idFirebase, widget.mad.personId);
 
-    if (kDebugMode) {
-      print('findChat(${widget.myProfile.profileData.idFirebase}, ${widget.mad.personId}): ${existingChat?.idFirebase}');
-    }
+    Commons.printIfInDebug('findChat(${widget.myProfile.profileData.idFirebase}, ${widget.mad.personId}): ${existingChat?.idFirebase}');
 
     if (existingChat == null) {
       // new

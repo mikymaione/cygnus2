@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/store/store_images.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
@@ -39,9 +40,7 @@ class _MyProfilePictureState extends State<MyProfilePicture> {
       try {
         return base64Decode(base64);
       } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
+        Commons.printIfInDebug(e);
       }
     }
 
