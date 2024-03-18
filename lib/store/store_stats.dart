@@ -17,6 +17,7 @@ import 'package:cygnus2/data_structures/stat_data.dart';
 import 'package:cygnus2/data_structures/time_series.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:cygnus2/utility/commons.dart';
 
 class StoreStats extends BaseStore {
   //
@@ -39,9 +40,14 @@ class StoreStats extends BaseStore {
   }
 
   Future<void> updateStats() async {
+    Commons.printIfInDebug('updateStats');
+
     final lastUpdatedStat = await _lastUpdatedStat();
+    Commons.printIfInDebug('lastUpdatedStat: $lastUpdatedStat');
 
     final chats = await _getChats(lastUpdatedStat);
+    Commons.printIfInDebug('chats: ${chats.length}');
+
     for (final c in chats) {
       final s = StatData(
         idFirebase: null,
@@ -53,6 +59,8 @@ class StoreStats extends BaseStore {
     }
 
     final mads = await _getMads(lastUpdatedStat);
+    Commons.printIfInDebug('mads: ${mads.length}');
+
     for (final c in mads) {
       final s = StatData(
         idFirebase: null,
@@ -64,6 +72,8 @@ class StoreStats extends BaseStore {
     }
 
     final profiles = await _getProfiles(lastUpdatedStat);
+    Commons.printIfInDebug('profiles: ${profiles.length}');
+
     for (final c in profiles) {
       final s = StatData(
         idFirebase: null,
