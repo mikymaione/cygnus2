@@ -65,8 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String get title => currentTab.label;
 
-  bool get showTabsLabel => MediaQuery.of(context).size.width > 490;
-
   _TabsName tabByIndex(int i) => switch (i) {
         0 => _TabsName.explore,
         1 => _TabsName.chats,
@@ -95,34 +93,30 @@ class _MyHomePageState extends State<MyHomePage> {
       child: DefaultTabController(
         length: tabs,
         child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Text(title),
-            bottom: TabBar(
-              onTap: (index) => setState(() => currentTab = tabByIndex(index)),
-              tabs: [
-                Tab(
-                  icon: const Icon(Icons.explore),
-                  text: showTabsLabel ? _TabsName.explore.label : null,
-                ),
-                Tab(
-                  icon: const Icon(Icons.chat),
-                  text: showTabsLabel ? _TabsName.chats.label : null,
-                ),
-                Tab(
-                  icon: const Icon(Icons.badge),
-                  text: showTabsLabel ? _TabsName.profile.label : null,
-                ),
-                Tab(
-                  icon: const Icon(Icons.area_chart),
-                  text: showTabsLabel ? _TabsName.stats.label : null,
-                ),
-                Tab(
-                  icon: const Icon(Icons.settings),
-                  text: showTabsLabel ? _TabsName.settings.label : null,
-                ),
-              ],
-            ),
+          appBar: TabBar(
+            onTap: (index) => setState(() => currentTab = tabByIndex(index)),
+            tabs: [
+              Tab(
+                icon: const Icon(Icons.explore),
+                text: _TabsName.explore.label,
+              ),
+              Tab(
+                icon: const Icon(Icons.chat),
+                text: _TabsName.chats.label,
+              ),
+              Tab(
+                icon: const Icon(Icons.badge),
+                text: _TabsName.profile.label,
+              ),
+              Tab(
+                icon: const Icon(Icons.area_chart),
+                text: _TabsName.stats.label,
+              ),
+              Tab(
+                icon: const Icon(Icons.settings),
+                text: _TabsName.settings.label,
+              ),
+            ],
           ),
           body: TabBarView(
             physics: const NeverScrollableScrollPhysics(),

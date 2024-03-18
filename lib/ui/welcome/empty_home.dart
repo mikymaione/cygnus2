@@ -23,12 +23,8 @@ class _EmptyHomePageState extends State<EmptyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Cygnus2'),
-        ),
-        body: const Center(
+      child: const Scaffold(
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
