@@ -8,11 +8,13 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
 import 'package:cygnus2/store/store_mad.dart';
+import 'package:cygnus2/utility/random_generator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class StoreAuth extends BaseStore {
   //
@@ -97,5 +99,33 @@ class StoreAuth extends BaseStore {
     );
 
     return result.user;
+  }
+
+  Future<String> sendSignInLinkToEmail(String email) async {
+    final otpI = RandomGenerator().randomBetween(10000, 99999);
+    final otp = '$otpI';
+
+    // do not indent
+    final x = '''<?xml version="1.0" encoding="utf-8"?>
+                  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                      <MandaMail xmlns="http://www.maionemiky.it/">
+                        <Oggetto>Cygnus2 - Codice OTP</Oggetto>
+                        <Testo>Il tuo codice OTP: $otp</Testo>
+                        <Destinatario>$email</Destinatario>
+                      </MandaMail>
+                    </soap:Body>
+                  </soap:Envelope>
+    ''';
+
+    await http.post(
+      Uri.parse('https://www.maionemiky.it/EmailSending.asmx'),
+      headers: {
+        "Content-Type": "text/xml",
+      },
+      body: x,
+    );
+
+    return otp;
   }
 }

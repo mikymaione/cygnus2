@@ -7,15 +7,15 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:cygnus2/ui/base/screen.dart';
 import 'package:cygnus2/store/store_auth.dart';
-import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/ui/base/msg.dart';
+import 'package:cygnus2/ui/base/screen.dart';
+import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/ui/otp/register_screen.dart';
 import 'package:cygnus2/utility/commons.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:cygnus2/utility/utility.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,28 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  String? validateEmail(String? email) {
-    if (email != null) {
-      // gennaro.esposito@studenti.unina.it
-      if (EmailValidator.validate(email)) {
-        // 0- gennaro.esposito
-        // 1- studenti.unina.it
-        final emailParts = email.split("@");
-
-        if (emailParts.length == 2) {
-          // studenti.unina.it
-          final domain = emailParts[1];
-
-          if (domain.toLowerCase().contains("uni")) {
-            return null;
-          }
-        }
-      }
-    }
-
-    return "Si prega di usare un indirizzo email universitario!";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Screen(
@@ -139,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: cEmail,
                 keyboardType: TextInputType.emailAddress,
                 autofocus: true,
-                validator: (email) => validateEmail(email),
+                validator: (email) => Utility.validateEmail(email),
               ),
 
               // Password

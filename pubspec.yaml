@@ -30,6 +30,7 @@ dependencies:
   firebase_messaging: ^14.7.20
   flutter_markdown: ^0.6.21
   flutter_profile_picture: ^2.0.0
+  input_dialog: ^0.1.1
   json_annotation: ^4.8.1
   image: ^4.1.7
   image_picker: ^1.0.7

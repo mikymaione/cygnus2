@@ -7,12 +7,15 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:flutter/material.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
-import 'package:cygnus2/ui/base/screen.dart';
 import 'package:cygnus2/store/store_auth.dart';
-import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/ui/base/msg.dart';
+import 'package:cygnus2/ui/base/screen.dart';
+import 'package:cygnus2/ui/forms/text_editor.dart';
+import 'package:cygnus2/utility/commons.dart';
+import 'package:cygnus2/utility/utility.dart';
+import 'package:flutter/material.dart';
+import 'package:input_dialog/input_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -22,6 +25,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final scrollController = ScrollController();
+
   final formKey = GlobalKey<FormState>();
 
   final cSurname = TextEditingController();
@@ -31,6 +36,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    scrollController.dispose();
+
     cSurname.dispose();
     cName.dispose();
     cEmail.dispose();
@@ -43,32 +50,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final storeAuth = StoreAuth();
 
     try {
-      final maybeUser = await storeAuth.createUser(
-        cEmail.text,
-        cPassword.text,
-      );
+      final systemOtp = await storeAuth.sendSignInLinkToEmail(cEmail.text);
 
-      if (maybeUser == null) {
-        if (mounted) {
-          Msg.showErrorMsg(context, 'Registrazione fallita!');
-        }
-      } else {
-        final profileData = ProfileData(
-          idFirebase: maybeUser.uid,
-          created: DateTime.now(),
-          surname: cSurname.text,
-          name: cName.text,
+      if (mounted) {
+        final userOtp = await InputDialog.show(
+          context: context,
+          title: 'Codice OTP ricevuto via email',
         );
 
-        await storeAuth.saveProfile(profileData);
+        if (systemOtp == userOtp) {
+          final maybeUser = await storeAuth.createUser(
+            cEmail.text,
+            cPassword.text,
+          );
 
-        if (mounted) {
-          Navigator.pop(context); // RegisterScreen
-          Navigator.pop(context); // LoginScreen
+          if (maybeUser == null) {
+            if (mounted) {
+              Msg.showErrorMsg(context, 'Registrazione fallita!');
+            }
+          } else {
+            final profileData = ProfileData(
+              idFirebase: maybeUser.uid,
+              created: DateTime.now(),
+              surname: cSurname.text,
+              name: cName.text,
+            );
+
+            await storeAuth.saveProfile(profileData);
+
+            if (mounted) {
+              Navigator.pop(context); // RegisterScreen
+              Navigator.pop(context); // LoginScreen
+            }
+          }
+        } else {
+          if (mounted) {
+            Msg.showErrorMsg(context, 'Il codice OTP non corrisponde!');
+          }
         }
       }
     } catch (e) {
       if (mounted) {
+        Commons.printIfInDebug(e);
         Msg.showError(context, e);
       }
     }
@@ -78,66 +101,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Screen(
       title: 'Registrazione',
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Surname
-              TextEditor(
-                label: 'Cognome',
-                required: true,
-                minLength: 2,
-                maxLength: 100,
-                controller: cSurname,
-                keyboardType: TextInputType.name,
-                autofocus: true,
-                textCapitalization: TextCapitalization.words,
-              ),
+      body: Scrollbar(
+        thumbVisibility: true,
+        controller: scrollController,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Surname
+                  TextEditor(
+                    label: 'Cognome',
+                    required: true,
+                    minLength: 2,
+                    maxLength: 100,
+                    controller: cSurname,
+                    keyboardType: TextInputType.name,
+                    autofocus: true,
+                    textCapitalization: TextCapitalization.words,
+                  ),
 
-              // Nome
-              TextEditor(
-                label: 'Nome',
-                required: true,
-                minLength: 2,
-                maxLength: 100,
-                controller: cName,
-                keyboardType: TextInputType.name,
-                textCapitalization: TextCapitalization.words,
-              ),
+                  // Nome
+                  TextEditor(
+                    label: 'Nome',
+                    required: true,
+                    minLength: 2,
+                    maxLength: 100,
+                    controller: cName,
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                  ),
 
-              // Email
-              TextEditor(
-                label: 'Email',
-                required: true,
-                minLength: 3,
-                maxLength: 320,
-                controller: cEmail,
-                keyboardType: TextInputType.emailAddress,
-              ),
+                  // Email
+                  TextEditor(
+                    label: 'Email',
+                    required: true,
+                    minLength: 10,
+                    maxLength: 320,
+                    controller: cEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (email) => Utility.validateEmail(email),
+                  ),
 
-              // Password
-              TextEditor(
-                label: 'Password',
-                required: true,
-                minLength: 8,
-                maxLength: 128,
-                obscureText: true,
-                controller: cPassword,
-              ),
+                  // Password
+                  TextEditor(
+                    label: 'Password',
+                    required: true,
+                    minLength: 8,
+                    maxLength: 128,
+                    obscureText: true,
+                    controller: cPassword,
+                  ),
 
-              // check button
-              ElevatedButton(
-                child: const Text('Registrati'),
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    await register();
-                  }
-                },
+                  // check button
+                  ElevatedButton(
+                    child: const Text('Registrati'),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await register();
+                      }
+                    },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

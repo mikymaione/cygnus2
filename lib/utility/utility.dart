@@ -8,11 +8,123 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/utility/generic_range.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utility {
   //
+  static final Set<String> _domains = {
+    'ateneo.univr.it',
+    'gssi.it',
+    'hunimed.eu',
+    'imtlucca.it',
+    'iuav.it',
+    'iulm.it',
+    'iusspavia.it',
+    'liuc.it',
+    'luiss.it',
+    'lum.it',
+    'lumsa.it',
+    'poliba.it ',
+    'polimi.it',
+    'polito.it',
+    'santannapisa.it',
+    'sissa.it',
+    'sns.it',
+    'strutture.univaq.it',
+    'uniba.it',
+    'unibas.it',
+    'unibg.it',
+    'unibo.it',
+    'unibocconi.it',
+    'unibs.it',
+    'unibz.it',
+    'unica.it ',
+    'unical.it ',
+    'unicam.it',
+    'unicampania.it',
+    'unicampus.it',
+    'unicas.it',
+    'unicatt.it',
+    'unich.it',
+    'unict.it',
+    'unicz.it',
+    'unife.it',
+    'unifg.it',
+    'unifi.it',
+    'unige.it',
+    'unikore.it',
+    'unilink.it',
+    'unimc.it',
+    'unime.it',
+    'unimi.it',
+    'unimib.it',
+    'unimol.it',
+    'unimore.it',
+    'unina.it',
+    'uninsubria.it',
+    'unint.eu',
+    'unior.it',
+    'unipa.it',
+    'uniparthenope.it',
+    'unipd.it',
+    'unipg.it',
+    'unipi.it',
+    'unipr.it',
+    'unipv.it',
+    'unirc.it',
+    'uniroma1.it',
+    'uniroma2.it',
+    'uniroma3.it',
+    'uniroma4.it',
+    'unisa.it',
+    'unisalento.it',
+    'unisannio.it',
+    'unisg.it',
+    'unisi.it',
+    'unisob.na.it',
+    'unisr.it',
+    'uniss.it',
+    'unistrapg.it',
+    'unistrasi.it',
+    'unite.it',
+    'unitn.it',
+    'unito.it',
+    'units.it',
+    'unitus.it',
+    'uniud.it',
+    'uniupo.it',
+    'uniurb.it',
+    'univda.it',
+    'unive.it',
+    'univpm.it',
+  };
+
+  static String? validateEmail(String? email) {
+    if (email != null) {
+      // gennaro.esposito@studenti.unina.it
+      if (EmailValidator.validate(email)) {
+        // 0- gennaro.esposito
+        // 1- studenti.unina.it
+        final emailParts = email.split("@");
+
+        if (emailParts.length == 2) {
+          // studenti.unina.it
+          final domain = emailParts[1].toLowerCase();
+
+          for (final d in _domains) {
+            if (domain.contains(d)) {
+              return null;
+            }
+          }
+        }
+      }
+    }
+
+    return "Si prega di usare un indirizzo email universitario!";
+  }
+
   static DateTime todayOnlyDate() => toOnlyDate(DateTime.now());
 
   static DateTime toOnlyDate(DateTime n) => DateTime(n.year, n.month, n.day);
