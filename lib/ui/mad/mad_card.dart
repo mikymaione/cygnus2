@@ -7,17 +7,20 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:cygnus2/data_structures/chats_data.dart';
+import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/store/store_images.dart';
 import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
-import 'package:cygnus2/data_structures/chats_data.dart';
 import 'package:cygnus2/ui/mad/icon_chip.dart';
+import 'package:cygnus2/ui/mad/my_profile_picture.dart';
 import 'package:cygnus2/utility/commons.dart';
+import 'package:cygnus2/utility/utility.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class MadCard extends StatefulWidget {
   final MyData myProfile;
@@ -36,7 +39,8 @@ class MadCard extends StatefulWidget {
 }
 
 class _MadCardState extends State<MadCard> {
-  //
+  final storeImages = StoreImages();
+
   Future<void> messageWith() async {
     final store = StoreMessages();
 
@@ -129,11 +133,13 @@ class _MadCardState extends State<MadCard> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Initials
-              ProfilePicture(
-                name: widget.mad.nickname,
-                radius: 24,
-                fontsize: 16,
+              // Profile Picture
+              StreamBuilder<ImageData?>(
+                stream: storeImages.getImage1(widget.mad.personId),
+                builder: (context, snapImage1) => MyProfilePicture(
+                  mad: widget.mad,
+                  imageData: snapImage1.data,
+                ),
               ),
 
               // space
@@ -199,7 +205,7 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.book,
                       color: Colors.green,
-                      labels: [widget.mad.bio ?? ''],
+                      labels: [Utility.left(widget.mad.bio, 50)],
                     ),
                   ],
                 ),

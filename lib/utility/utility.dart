@@ -7,9 +7,9 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+import 'package:cygnus2/utility/generic_range.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cygnus2/utility/generic_range.dart';
 
 class Utility {
   //
@@ -42,6 +42,12 @@ class Utility {
       stringToTimeOfDay(a[1]),
     );
   }
+
+  static String left(String? s, int len) => s == null
+      ? ''
+      : s.length < len
+          ? s
+          : '${s.substring(0, len)}…';
 
   static String datetimeYMMMMDHm(String languageCode, DateTime d) => DateFormat.yMMMMd(languageCode).add_Hm().format(d);
 

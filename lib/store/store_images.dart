@@ -56,6 +56,30 @@ class StoreImages extends BaseStore {
         merge: true,
       );
 
+  Stream<ImageData?> getImage1(String? idFirebaseMad) {
+    return FirebaseFirestore.instance
+        .collection(
+          FirebaseTables.myself.name,
+        )
+        .doc(idFirebaseMad)
+        .collection(
+          FirebaseTables.image.name,
+        )
+        .orderBy('order')
+        .limit(1)
+        .snapshots()
+        .handleError(
+          (e) => Commons.printIfInDebug('Error in "getImage1": $e'),
+        )
+        .map(
+          (ref) => ref.docs
+              .map(
+                (json) => ImageData.fromJson(json.id, json.data()),
+              )
+              .firstOrNull,
+        );
+  }
+
   Stream<List<ImageData>> getImages(String? idFirebaseMad) {
     return FirebaseFirestore.instance
         .collection(
