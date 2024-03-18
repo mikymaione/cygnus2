@@ -11,7 +11,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/chats_data.dart';
-import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/data_structures/stat_data.dart';
 import 'package:cygnus2/data_structures/time_series.dart';
@@ -58,19 +57,6 @@ class StoreStats extends BaseStore {
       await save(FirebaseTables.stats, s.idFirebase, s.toJson());
     }
 
-    final mads = await _getMads(lastUpdatedStat);
-    Commons.printIfInDebug('mads: ${mads.length}');
-
-    for (final c in mads) {
-      final s = StatData(
-        idFirebase: null,
-        name: FirebaseTables.myself.name,
-        data: c,
-      );
-
-      await save(FirebaseTables.stats, s.idFirebase, s.toJson());
-    }
-
     final profiles = await _getProfiles(lastUpdatedStat);
     Commons.printIfInDebug('profiles: ${profiles.length}');
 
@@ -98,22 +84,6 @@ class StoreStats extends BaseStore {
 
     return ref.docs.map(
       (json) => ChatsData.fromJson(json.id, json.data()).created,
-    );
-  }
-
-  Future<Iterable<DateTime>> _getMads(DateTime? after) async {
-    final ref = await FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.myself.name,
-        )
-        .where(
-          'created',
-          isGreaterThanOrEqualTo: after,
-        )
-        .get();
-
-    return ref.docs.map(
-      (json) => MadData.fromJson(json.id, json.data()).created,
     );
   }
 
