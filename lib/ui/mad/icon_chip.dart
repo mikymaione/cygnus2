@@ -23,19 +23,24 @@ class IconChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: color,
-        ),
-        for (final l in labels) ...[
-          Text(l),
+    return Text.rich(
+      TextSpan(
+        children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: Icon(
+                icon,
+                color: color,
+              ),
+            ),
+          ),
+          for (final l in labels) ...[
+            TextSpan(text: l),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

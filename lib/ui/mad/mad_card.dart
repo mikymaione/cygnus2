@@ -202,11 +202,13 @@ class _MadCardState extends State<MadCard> {
                     const SizedBox(height: 8),
 
                     // Bio
-                    IconChip(
-                      icon: Icons.book,
-                      color: Colors.green,
-                      labels: [Utility.left(widget.mad.bio, 50)],
-                    ),
+                    if (widget.mad.bio != null && widget.mad.bio!.isNotEmpty) ...[
+                      IconChip(
+                        icon: Icons.book,
+                        color: Colors.green,
+                        labels: [Utility.left(widget.mad.bio, 50)],
+                      ),
+                    ],
                   ],
                 ),
               ),
