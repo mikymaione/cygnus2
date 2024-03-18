@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 
 class MadListFiltered extends StatefulWidget {
   final MyData? myProfile;
-
   final GenericController<MadFilter> filters;
 
   const MadListFiltered({
@@ -35,13 +34,13 @@ class MadListFiltered extends StatefulWidget {
 }
 
 class _MadListFilteredState extends State<MadListFiltered> {
-  final scrollController = ScrollController();
   final storeMad = StoreMad();
+
+  final scrollController = ScrollController();
 
   @override
   void dispose() {
     scrollController.dispose();
-
     super.dispose();
   }
 
@@ -60,7 +59,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
   }
 
   List<MadData> sortMads(Iterable<MadData>? mads) => mads == null
-      ? List<MadData>.empty(growable: false)
+      ? const <MadData>[]
       : mads.sorted(
           (a, b) => a.created.compareTo(b.created),
         );
@@ -89,7 +88,9 @@ class _MadListFilteredState extends State<MadListFiltered> {
                 // filter list
                 if (widget.filters.value != null) ...[
                   if (widget.filters.value!.city != null) ...[
-                    Chip(label: Text(widget.filters.value!.city!)),
+                    Chip(
+                      label: Text(widget.filters.value!.city!),
+                    ),
                   ],
                 ],
               ],
@@ -102,9 +103,8 @@ class _MadListFilteredState extends State<MadListFiltered> {
           stream: storeMad.searchMads(widget.myProfile?.profileData.idFirebase, widget.filters.value),
           builder: (context, snapshot) {
             final items = sortMads(snapshot.data);
-            final count = snapshot.data?.length ?? 0;
 
-            return count == 0
+            return items.isEmpty
                 ? NoElement(
                     icon: Icons.explore,
                     iconColor: Colors.blue,
@@ -119,15 +119,11 @@ class _MadListFilteredState extends State<MadListFiltered> {
                       child: ListView.builder(
                         controller: scrollController,
                         itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final mad = items[index];
-
-                          return MadCard(
-                            myProfile: widget.myProfile!,
-                            mad: mad,
-                            onTap: null,
-                          );
-                        },
+                        itemBuilder: (context, index) => MadCard(
+                          myProfile: widget.myProfile!,
+                          mad: items[index],
+                          onTap: null,
+                        ),
                       ),
                     ),
                   );
