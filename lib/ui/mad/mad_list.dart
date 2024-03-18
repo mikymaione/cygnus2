@@ -15,17 +15,20 @@ import 'package:cygnus2/utility/generic_controller.dart';
 
 class MadList extends StatelessWidget {
   final MyData? myProfile;
+  final String myName;
   final GenericController<MadFilter> filters;
 
   const MadList({
     super.key,
     this.myProfile,
+    required this.myName,
     required this.filters,
   });
 
   @override
   Widget build(BuildContext context) {
     return MadListFiltered(
+      myName: myName,
       myProfile: myProfile,
       filters: filters,
     );

@@ -21,10 +21,12 @@ import 'package:flutter/material.dart';
 
 class MadListFiltered extends StatefulWidget {
   final MyData? myProfile;
+  final String myName;
   final GenericController<MadFilter> filters;
 
   const MadListFiltered({
     super.key,
+    required this.myName,
     required this.myProfile,
     required this.filters,
   });
@@ -121,6 +123,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
                         itemCount: items.length,
                         itemBuilder: (context, index) => MadCard(
                           myProfile: widget.myProfile!,
+                          myName: widget.myName,
                           mad: items[index],
                           onTap: null,
                         ),

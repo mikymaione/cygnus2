@@ -20,9 +20,11 @@ import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   final MyData myProfile; // for loading reason
+  final String myName;
 
   const MyHomePage({
     super.key,
+    required this.myName,
     required this.myProfile,
   });
 
@@ -126,7 +128,11 @@ class _MyHomePageState extends State<MyHomePage> {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               // list of profiles in system
-              MadList(myProfile: widget.myProfile, filters: filters),
+              MadList(
+                myProfile: widget.myProfile,
+                myName: widget.myName,
+                filters: filters,
+              ),
 
               // my chats
               Chats(myProfile: widget.myProfile),

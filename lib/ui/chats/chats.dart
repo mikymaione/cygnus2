@@ -7,15 +7,15 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:flutter/material.dart';
-import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:cygnus2/data_structures/chats_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
-import 'package:cygnus2/data_structures/chats_data.dart';
+import 'package:cygnus2/ui/mad/my_profile_picture.dart';
 import 'package:cygnus2/utility/commons.dart';
+import 'package:flutter/material.dart';
 
 class Chats extends StatefulWidget {
   final MyData? myProfile;
@@ -75,10 +75,9 @@ class _ChatsState extends State<Chats> {
                           ),
                         ),
                         child: ListTile(
-                          leading: ProfilePicture(
-                            name: chat.interlocutorName(widget.myProfile!.profileData.idFirebase),
-                            radius: 24,
-                            fontsize: 16,
+                          leading: MyProfilePicture(
+                            nickname: chat.interlocutorName(widget.myProfile!.profileData.idFirebase),
+                            personId: chat.interlocutorId(widget.myProfile!.profileData.idFirebase),
                           ),
                           title: Text(chat.interlocutorName(widget.myProfile!.profileData.idFirebase)),
                           subtitle: Text(

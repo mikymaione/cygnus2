@@ -45,6 +45,19 @@ class StoreMad extends BaseStore {
         );
   }
 
+  Future<String?> myNickName(String? personId) async {
+    final json = await FirebaseFirestore.instance
+        .collection(
+          FirebaseTables.myself.name,
+        )
+        .doc(personId)
+        .get();
+
+    final maybeMad = MadData.fromNullableJson(json.id, json.data());
+
+    return maybeMad?.nickname;
+  }
+
   Stream<MadData?> getMad(String personId) {
     return FirebaseFirestore.instance
         .collection(

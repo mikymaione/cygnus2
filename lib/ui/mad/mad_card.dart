@@ -8,10 +8,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/data_structures/chats_data.dart';
-import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
-import 'package:cygnus2/store/store_images.dart';
 import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
@@ -23,6 +21,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class MadCard extends StatefulWidget {
+  final String myName;
   final MyData myProfile;
   final MadData mad;
   final GestureTapCallback? onTap;
@@ -31,6 +30,7 @@ class MadCard extends StatefulWidget {
     super.key,
     required this.mad,
     required this.onTap,
+    required this.myName,
     required this.myProfile,
   });
 
@@ -39,8 +39,6 @@ class MadCard extends StatefulWidget {
 }
 
 class _MadCardState extends State<MadCard> {
-  final storeImages = StoreImages();
-
   Future<void> messageWith() async {
     final store = StoreMessages();
 
@@ -64,7 +62,7 @@ class _MadCardState extends State<MadCard> {
           widget.mad.personId: true,
         },
         interlocutors: {
-          widget.myProfile.profileData.idFirebase: widget.myProfile.profileData.displayName,
+          widget.myProfile.profileData.idFirebase: widget.myName,
           widget.mad.personId: widget.mad.nickname,
         },
         lastMessageText: '',
@@ -134,12 +132,10 @@ class _MadCardState extends State<MadCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Picture
-              StreamBuilder<ImageData?>(
-                stream: storeImages.getImage1(widget.mad.personId),
-                builder: (context, snapImage1) => MyProfilePicture(
-                  mad: widget.mad,
-                  imageData: snapImage1.data,
-                ),
+              MyProfilePicture(
+                nickname: widget.mad.nickname,
+                personId: widget.mad.personId,
+                size: 100,
               ),
 
               // space

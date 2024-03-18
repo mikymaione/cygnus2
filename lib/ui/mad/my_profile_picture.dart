@@ -10,36 +10,67 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'dart:convert';
 
 import 'package:cygnus2/data_structures/image_data.dart';
-import 'package:cygnus2/data_structures/mad_data.dart';
+import 'package:cygnus2/store/store_images.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 
-class MyProfilePicture extends StatelessWidget {
-  final MadData mad;
-  final ImageData? imageData;
+class MyProfilePicture extends StatefulWidget {
+  final String personId;
+  final String nickname;
+  final double? size;
 
   const MyProfilePicture({
     super.key,
-    required this.mad,
-    required this.imageData,
+    required this.personId,
+    required this.nickname,
+    this.size,
   });
+
+  @override
+  State<MyProfilePicture> createState() => _MyProfilePictureState();
+}
+
+class _MyProfilePictureState extends State<MyProfilePicture> {
+  final storeImages = StoreImages();
+
+  Uint8List? decode(String? base64) {
+    if (base64 != null) {
+      try {
+        return base64Decode(base64);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     // Initials or 1 image
-    return imageData == null
-        ? ProfilePicture(
-            name: mad.nickname,
-            radius: 24,
-            fontsize: 16,
-          )
-        : SizedBox(
-            width: 100,
-            height: 100,
-            child: Image.memory(
-              base64Decode(imageData!.base64Image),
-              fit: BoxFit.contain,
-            ),
-          );
+    return StreamBuilder<ImageData?>(
+      stream: storeImages.getImage1(widget.personId),
+      builder: (context, snapImage1) {
+        final image = decode(snapImage1.data?.base64Image);
+
+        return image == null
+            ? ProfilePicture(
+                name: widget.nickname,
+                radius: 24,
+                fontsize: 16,
+              )
+            : SizedBox(
+                width: widget.size,
+                height: widget.size,
+                child: Image.memory(
+                  image,
+                  fit: BoxFit.contain,
+                ),
+              );
+      },
+    );
   }
 }
