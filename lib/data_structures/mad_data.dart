@@ -9,10 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:age_calculator/age_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:cygnus2/data_structures/base_data.dart';
-import 'package:cygnus2/ui/mad/city.dart';
-import 'package:cygnus2/ui/mad/city_dao.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'mad_data.g.dart';
@@ -34,40 +32,23 @@ class MadData {
   final String university;
   final String department;
 
-  final Set<String> whereCityName; // ['Alpignano', 'Barbania']
-  final Set<String> whereProvince; // ['Napoli', 'Torino']
-  final Set<String> whereProvinceCitiesName; // ['Napoli', 'Portici', 'Marano']
+  // GeoFirePoint.data
+  final dynamic location;
+
+  GeoPoint get geoPoint => location['geopoint'] as GeoPoint;
+
+  GeoFirePoint get geoFirePoint => GeoFirePoint(geoPoint);
+
+  double? distanceTo(GeoPoint? p) => p == null ? null : geoFirePoint.distanceBetweenInKm(geopoint: p);
+
+  String distanceToS(GeoPoint? p) {
+    final d = distanceTo(p);
+    return d == null ? 'Sconosciuta' : '$d km';
+  }
 
   int get age => AgeCalculator.age(birthday).years;
 
   String get ageS => '$age years';
-
-  Iterable<String> get whereCitiesNameByProvince => whereCitiesByProvince.map(
-        (c) => c.name,
-      );
-
-  Iterable<City> get whereCitiesByProvince => whereProvince
-      .map(
-        (p) => CityDao.citiesByProvince(p),
-      )
-      .expand((c) => c)
-      .whereNotNull();
-
-  Iterable<String> get whereCitiesOnlyName => whereCities.map(
-        (c) => c.displayName,
-      );
-
-  Iterable<City> get whereCities => whereCityName
-      .map(
-        (c) => CityDao.getCityByName(c),
-      )
-      .whereNotNull();
-
-  Iterable<City> get whereProvinceCities => whereProvinceCitiesName
-      .map(
-        (c) => CityDao.getCityByName(c),
-      )
-      .whereNotNull();
 
   MadData({
     required this.idFirebase,
@@ -78,14 +59,12 @@ class MadData {
     this.bio,
     required this.university,
     required this.department,
-    required this.whereCityName,
-    required this.whereProvince,
-    required this.whereProvinceCitiesName,
+    required this.location,
   });
 
-  Map<String, dynamic> toJson() => _$MadDataToJson(this);
-
   static MadData? fromNullableJson(String idFirebase, Map<String, dynamic>? json) => json == null ? null : MadData.fromJson(idFirebase, json);
+
+  Map<String, dynamic> toJson() => _$MadDataToJson(this);
 
   factory MadData.fromJson(String idFirebase, Map<String, dynamic> json) => BaseData.fromJson<MadData>(
         idFirebase,

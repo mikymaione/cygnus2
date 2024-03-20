@@ -16,16 +16,7 @@ MadData _$MadDataFromJson(Map<String, dynamic> json) => MadData(
       bio: json['bio'] as String?,
       university: json['university'] as String,
       department: json['department'] as String,
-      whereCityName: (json['whereCityName'] as List<dynamic>)
-          .map((e) => e as String)
-          .toSet(),
-      whereProvince: (json['whereProvince'] as List<dynamic>)
-          .map((e) => e as String)
-          .toSet(),
-      whereProvinceCitiesName:
-          (json['whereProvinceCitiesName'] as List<dynamic>)
-              .map((e) => e as String)
-              .toSet(),
+      location: json['location'],
     );
 
 Map<String, dynamic> _$MadDataToJson(MadData instance) {
@@ -45,8 +36,6 @@ Map<String, dynamic> _$MadDataToJson(MadData instance) {
   val['bio'] = instance.bio;
   val['university'] = instance.university;
   val['department'] = instance.department;
-  val['whereCityName'] = instance.whereCityName.toList();
-  val['whereProvince'] = instance.whereProvince.toList();
-  val['whereProvinceCitiesName'] = instance.whereProvinceCitiesName.toList();
+  val['location'] = instance.location;
   return val;
 }

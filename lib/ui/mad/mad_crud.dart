@@ -13,9 +13,7 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/date_editor.dart';
-import 'package:cygnus2/ui/forms/province_or_city_form.dart';
 import 'package:cygnus2/ui/forms/text_editor.dart';
-import 'package:cygnus2/ui/mad/city_dao.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -91,9 +89,6 @@ class _MadCrudState extends State<MadCrud> {
   final cUniversity = TextEditingController();
   final cDepartment = TextEditingController();
 
-  final cCityNames = GenericController<Set<String>>();
-  final cProvinces = GenericController<Set<String>>();
-
   String? getImageByIndex(List<ImageData> images, int i) => i < images.length ? images[i].base64Image : null;
 
   @override
@@ -106,9 +101,6 @@ class _MadCrudState extends State<MadCrud> {
 
     cUniversity.text = widget.mad?.university ?? '';
     cDepartment.text = widget.mad?.department ?? '';
-
-    cCityNames.value = widget.mad?.whereCityName;
-    cProvinces.value = widget.mad?.whereProvince;
   }
 
   @override
@@ -120,29 +112,12 @@ class _MadCrudState extends State<MadCrud> {
     cUniversity.dispose();
     cDepartment.dispose();
 
-    cCityNames.value?.clear();
-    cCityNames.dispose();
-
-    cProvinces.value?.clear();
-    cProvinces.dispose();
-
     super.dispose();
   }
 
   Future<void> save() async {
     if (formKey.currentState!.validate()) {
       try {
-        // add all city in a province
-        final whereProvinceCitiesName = {
-          for (final p in cProvinces.value ?? <String>{})
-            for (final c in CityDao.citiesByProvince(p)) c.name
-        };
-
-        // add the cities
-        for (final c in cCityNames.value ?? <String>{}) {
-          whereProvinceCitiesName.add(c);
-        }
-
         final m = MadData(
           idFirebase: widget.myProfile.profileData.idFirebase,
           personId: widget.myProfile.profileData.idFirebase,
@@ -151,9 +126,7 @@ class _MadCrudState extends State<MadCrud> {
           bio: cBio.text,
           university: cUniversity.text,
           department: cDepartment.text,
-          whereCityName: cCityNames.value ?? {},
-          whereProvince: cProvinces.value ?? {},
-          whereProvinceCitiesName: whereProvinceCitiesName,
+          location: widget.myProfile.myLocation!.data,
           created: DateTime.now(),
         );
 
@@ -235,25 +208,20 @@ class _MadCrudState extends State<MadCrud> {
             readOnly: widget.readOnly,
           ),
 
-          // Province & City
           const Text(
-            'Dove ti trovi? (è obbligatorio selezionare almeno uno tra comune o provincia)',
+            'Posizione (obbligatorio)',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
-
-          ProvinceOrCityForm(
-            cCityNames: cCityNames,
-            cProvinces: cProvinces,
-            readOnly: widget.readOnly,
-            validator: (selected) => true == selected ? null : 'Seleziona almeno una provincia o un comune',
+          const SizedBox(height: 4),
+          Text(
+            'Lat: ${widget.myProfile.myLocation!.latitude}, Lon: ${widget.myProfile.myLocation!.longitude}',
           ),
 
           // save button
           if (!widget.readOnly) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () => save(),
               child: const Text('Salva'),

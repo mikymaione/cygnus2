@@ -8,9 +8,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/ui/base/screen.dart';
-import 'package:cygnus2/ui/forms/city_list.dart';
+import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/ui/mad/mad_filter.dart';
-import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
 class MadFilters extends StatefulWidget {
@@ -30,16 +29,15 @@ class _MadFiltersState extends State<MadFilters> {
 
   final scrollController = ScrollController();
 
-  final cCityNames = GenericController<Set<String>>();
+  final cCityNames = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
     if (widget.filters != null) {
-      cCityNames.value ??= {};
       if (widget.filters!.city != null) {
-        cCityNames.value!.add(widget.filters!.city!);
+        cCityNames.text = widget.filters!.city!;
       }
     }
   }
@@ -48,7 +46,6 @@ class _MadFiltersState extends State<MadFilters> {
   void dispose() {
     scrollController.dispose();
 
-    cCityNames.value?.clear();
     cCityNames.dispose();
 
     super.dispose();
@@ -65,7 +62,7 @@ class _MadFiltersState extends State<MadFilters> {
     if (true == formKey.currentState?.validate()) {
       final filters = MadFilter(
         cleared: false,
-        city: cCityNames.value != null && cCityNames.value!.isNotEmpty ? cCityNames.value!.first : null,
+        city: cCityNames.text.isNotEmpty ? cCityNames.text : null,
       );
 
       if (mounted) {
@@ -93,14 +90,10 @@ class _MadFiltersState extends State<MadFilters> {
                 children: [
                   // City
                   const SizedBox(height: 16),
-                  CityList(
-                    label: 'Comune (obbligatorio)',
-                    subLabel: 'Indicare il comune dove deve recarsi la persona per lo svolgimento dell’attività',
-                    buttonLabel: 'Seleziona un comune',
+                  TextEditor(
+                    label: 'Posizione',
                     controller: cCityNames,
-                    readOnly: false,
-                    selectOnlyOne: true,
-                    validator: (selected) => true == selected ? null : 'Seleziona un comune',
+                    required: true,
                   ),
 
                   // save button

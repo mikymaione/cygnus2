@@ -8,11 +8,13 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
 import 'package:cygnus2/ui/mad/mad_filter.dart';
 import 'package:cygnus2/utility/commons.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class StoreMad extends BaseStore {
   //
@@ -20,6 +22,19 @@ class StoreMad extends BaseStore {
         FirebaseTables.myself,
         idFirebase,
       );
+
+  Future<void> updateLocation(String idFirebase, GeoFirePoint? location) async {
+    if (location != null) {
+      await StoreMad().save(
+        FirebaseTables.myself,
+        idFirebase,
+        {
+          'location': location.data,
+        },
+        merge: true,
+      );
+    }
+  }
 
   Future<String> saveMad(MadData m) => save(
         FirebaseTables.myself,
@@ -45,20 +60,7 @@ class StoreMad extends BaseStore {
         );
   }
 
-  Future<String?> myNickName(String? personId) async {
-    final json = await FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.myself.name,
-        )
-        .doc(personId)
-        .get();
-
-    final maybeMad = MadData.fromNullableJson(json.id, json.data());
-
-    return maybeMad?.nickname;
-  }
-
-  Stream<MadData?> getMad(String personId) {
+  Stream<MadData?> getMad(String? personId) {
     return FirebaseFirestore.instance
         .collection(
           FirebaseTables.myself.name,
@@ -73,55 +75,79 @@ class StoreMad extends BaseStore {
         );
   }
 
-  Stream<Iterable<MadData>> _first10Mads(String myId) {
-    return FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.myself.name,
+  Stream<Iterable<MadData>> _allMads(String myId, GeoFirePoint myLocation, double radiusInKm) {
+    return GeoCollectionReference<MadData>(
+      FirebaseFirestore.instance
+          .collection(
+            FirebaseTables.myself.name,
+          )
+          .withConverter<MadData>(
+            fromFirestore: (snapshot, options) => MadData.fromJson(snapshot.id, snapshot.data()!),
+            toFirestore: (madData, options) => madData.toJson(),
+          ),
+    )
+        .subscribeWithin(
+          geopointFrom: (madData) => madData.geoPoint,
+          center: myLocation,
+          radiusInKm: radiusInKm,
+          field: 'location',
+          strictMode: true,
         )
-        .limit(10)
-        .snapshots()
         .handleError(
-          (e) => Commons.printIfInDebug('Error in "_first10Mads": $e'),
+          (e) => Commons.printIfInDebug('Error in "_allMads": $e'),
         )
         .map(
-          (ref) => ref.docs
+          (docs) => docs
               .map(
-                (json) => MadData.fromJson(json.id, json.data()),
+                (doc) => doc.data(),
               )
+              .whereNotNull()
               .where(
-                (mad) => mad.personId != myId,
+                (mad) => myId != mad.personId,
               ),
         );
   }
 
-  Stream<Iterable<MadData>> _searchMads(String myId, MadFilter filter) {
-    return FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.myself.name,
+  Stream<Iterable<MadData>> _searchMads(String myId, MadFilter filter, GeoFirePoint myLocation, double radiusInKm) {
+    return GeoCollectionReference<MadData>(
+      FirebaseFirestore.instance
+          .collection(
+            FirebaseTables.myself.name,
+          )
+          .withConverter<MadData>(
+            fromFirestore: (snapshot, options) => MadData.fromJson(snapshot.id, snapshot.data()!),
+            toFirestore: (madData, options) => madData.toJson(),
+          ),
+    )
+        .subscribeWithin(
+          geopointFrom: (madData) => madData.geoPoint,
+          center: myLocation,
+          radiusInKm: radiusInKm,
+          field: 'location',
+          strictMode: true,
         )
-        .where(
-          'whereProvinceCitiesName',
-          arrayContains: filter.city,
-        )
-        .limit(filter.noFilterSet ? 10 : 50)
-        .snapshots()
         .handleError(
-          (e) => Commons.printIfInDebug('Error in "_searchMadsByProvince": $e'),
+          (e) => Commons.printIfInDebug('Error in "_allMads": $e'),
         )
         .map(
-          (ref) => ref.docs.map(
-            (json) => MadData.fromJson(json.id, json.data()),
-          ),
+          (docs) => docs
+              .map(
+                (doc) => doc.data(),
+              )
+              .whereNotNull()
+              .where(
+                (mad) => myId != mad.personId,
+              ),
         );
   }
 
-  Stream<Iterable<MadData>> searchMads(String? myId, MadFilter? filter) {
-    if (myId == null) {
+  Stream<Iterable<MadData>> searchMads(String? myId, MadFilter? filter, GeoFirePoint? myLocation, double radius) {
+    if (myId == null || myLocation == null) {
       return const Stream<Iterable<MadData>>.empty();
     } else if (filter == null) {
-      return _first10Mads(myId);
+      return _allMads(myId, myLocation, radius);
     } else {
-      return _searchMads(myId, filter);
+      return _searchMads(myId, filter, myLocation, radius);
     }
   }
 

@@ -10,7 +10,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:flutter/material.dart';
 
 class EmptyHomePage extends StatefulWidget {
-  const EmptyHomePage({super.key});
+  final String label;
+
+  const EmptyHomePage({
+    super.key,
+    required this.label,
+  });
 
   @override
   State<EmptyHomePage> createState() => _EmptyHomePageState();
@@ -23,21 +28,21 @@ class _EmptyHomePageState extends State<EmptyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: const Scaffold(
+      child: Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
+              const CircularProgressIndicator(),
 
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // msg
               Text(
-                'Caricamento…',
+                widget.label,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
                 ),
               ),

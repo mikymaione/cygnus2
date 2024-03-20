@@ -30,11 +30,14 @@ dependencies:
   firebase_messaging: ^14.7.20
   flutter_markdown: ^0.6.21
   flutter_profile_picture: ^2.0.0
-  input_dialog: ^0.1.1
-  json_annotation: ^4.8.1
+  geoflutterfire_plus: ^0.0.20
+  http: ^1.2.1
   image: ^4.1.7
   image_picker: ^1.0.7
+  input_dialog: ^0.1.1
   intl: ^0.18.1
+  json_annotation: ^4.8.1
+  location: ^5.0.3
   package_info_plus: ^4.2.0
   recase: ^4.1.0
 

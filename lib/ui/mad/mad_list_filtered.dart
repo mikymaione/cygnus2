@@ -21,12 +21,10 @@ import 'package:flutter/material.dart';
 
 class MadListFiltered extends StatefulWidget {
   final MyData? myProfile;
-  final String myName;
   final GenericController<MadFilter> filters;
 
   const MadListFiltered({
     super.key,
-    required this.myName,
     required this.myProfile,
     required this.filters,
   });
@@ -102,7 +100,12 @@ class _MadListFilteredState extends State<MadListFiltered> {
 
         // list of mads
         StreamBuilder<Iterable<MadData>>(
-          stream: storeMad.searchMads(widget.myProfile?.profileData.idFirebase, widget.filters.value),
+          stream: storeMad.searchMads(
+            widget.myProfile?.profileData.idFirebase,
+            widget.filters.value,
+            widget.myProfile?.madData?.geoFirePoint,
+            4,
+          ),
           builder: (context, snapshot) {
             final items = sortMads(snapshot.data);
 
@@ -123,7 +126,6 @@ class _MadListFilteredState extends State<MadListFiltered> {
                         itemCount: items.length,
                         itemBuilder: (context, index) => MadCard(
                           myProfile: widget.myProfile!,
-                          myName: widget.myName,
                           mad: items[index],
                           onTap: null,
                         ),

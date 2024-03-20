@@ -20,7 +20,6 @@ import 'package:cygnus2/utility/utility.dart';
 import 'package:flutter/material.dart';
 
 class MadCard extends StatefulWidget {
-  final String myName;
   final MyData myProfile;
   final MadData mad;
   final GestureTapCallback? onTap;
@@ -29,7 +28,6 @@ class MadCard extends StatefulWidget {
     super.key,
     required this.mad,
     required this.onTap,
-    required this.myName,
     required this.myProfile,
   });
 
@@ -59,7 +57,7 @@ class _MadCardState extends State<MadCard> {
           widget.mad.personId: true,
         },
         interlocutors: {
-          widget.myProfile.profileData.idFirebase: widget.myName,
+          widget.myProfile.profileData.idFirebase: widget.myProfile.madData!.nickname,
           widget.mad.personId: widget.mad.nickname,
         },
         lastMessageText: '',
@@ -188,7 +186,7 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.location_pin,
                       color: Colors.red,
-                      labels: widget.mad.whereProvince.toList() + widget.mad.whereCitiesOnlyName.toList(),
+                      labels: [widget.mad.distanceToS(widget.myProfile.madData?.geoPoint)],
                     ),
 
                     // space

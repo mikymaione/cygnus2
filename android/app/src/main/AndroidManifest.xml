@@ -41,4 +41,7 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
+    <users-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <users-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 </manifest>
