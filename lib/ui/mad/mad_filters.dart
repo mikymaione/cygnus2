@@ -18,10 +18,12 @@ import 'package:flutter/material.dart';
 
 class MadFilters extends StatefulWidget {
   final MyData myProfile;
+  final MadFilter? filters;
 
   const MadFilters({
     super.key,
     required this.myProfile,
+    required this.filters,
   });
 
   @override
@@ -39,7 +41,7 @@ class _MadFiltersState extends State<MadFilters> {
   void initState() {
     super.initState();
 
-    cKm.value = widget.myProfile.filters?.km?.toDouble();
+    cKm.value = widget.filters?.km?.toDouble();
   }
 
   @override

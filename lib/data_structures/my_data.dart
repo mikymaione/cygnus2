@@ -9,12 +9,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cygnus2/data_structures/blocked_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
-import 'package:cygnus2/data_structures/mad_filter.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 
 class MyData {
   final MadData? madData;
-  final MadFilter? filters;
   final ProfileData? profileData;
   final Iterable<Blocked>? blockedMe, blockedByMe;
 
@@ -38,7 +36,6 @@ class MyData {
 
   const MyData({
     required this.madData,
-    required this.filters,
     required this.profileData,
     required this.blockedMe,
     required this.blockedByMe,

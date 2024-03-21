@@ -9,12 +9,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cygnus2/data_structures/blocked_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
-import 'package:cygnus2/data_structures/mad_filter.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/store_auth.dart';
 import 'package:cygnus2/store/store_blocked.dart';
-import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/welcome/home.dart';
 import 'package:cygnus2/ui/welcome/welcome.dart';
@@ -34,7 +32,6 @@ class _Cygnus2State extends State<Cygnus2> {
   Widget build(BuildContext context) {
     final storeAuth = StoreAuth();
     final storeMad = StoreMad();
-    final storeFilter = StoreFilter();
     final storeBlocked = StoreBlocked();
 
     return StreamBuilder<User?>(
@@ -67,16 +64,12 @@ class _Cygnus2State extends State<Cygnus2> {
                     stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
                     builder: (context, snapHaveBlockedMe) => StreamBuilder<MadData?>(
                       stream: storeMad.getMad(snapProfile.data?.idFirebase),
-                      builder: (context, snapMyMad) => StreamBuilder<MadFilter?>(
-                        stream: storeFilter.getFilter(snapProfile.data?.idFirebase),
-                        builder: (context, snapFilter) => MyHomePage(
-                          myProfile: MyData(
-                            madData: snapMyMad.data,
-                            filters: snapFilter.data,
-                            profileData: snapProfile.data,
-                            blockedByMe: snapBlockedByMe.data,
-                            blockedMe: snapHaveBlockedMe.data,
-                          ),
+                      builder: (context, snapMyMad) => MyHomePage(
+                        myProfile: MyData(
+                          madData: snapMyMad.data,
+                          profileData: snapProfile.data,
+                          blockedByMe: snapBlockedByMe.data,
+                          blockedMe: snapHaveBlockedMe.data,
                         ),
                       ),
                     ),

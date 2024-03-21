@@ -9,7 +9,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:collection/collection.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
+import 'package:cygnus2/data_structures/mad_filter.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:cygnus2/ui/mad/mad_card.dart';
@@ -31,6 +33,7 @@ class MadListFiltered extends StatefulWidget {
 
 class _MadListFilteredState extends State<MadListFiltered> {
   final storeMad = StoreMad();
+  final storeFilter = StoreFilter();
 
   final scrollController = ScrollController();
 
@@ -40,10 +43,11 @@ class _MadListFilteredState extends State<MadListFiltered> {
     super.dispose();
   }
 
-  Future<void> showFilters() async => await Commons.navigate<void>(
+  Future<void> showFilters(MadFilter? filters) async => await Commons.navigate<void>(
         context: context,
         builder: (context) => MadFilters(
           myProfile: widget.myProfile!,
+          filters: filters,
         ),
       );
 
@@ -55,73 +59,76 @@ class _MadListFilteredState extends State<MadListFiltered> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // filters
-        Card(
-          elevation: 2,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                // Show filters button
-                OutlinedButton.icon(
-                  icon: Icon(widget.myProfile?.filters == null ? Icons.filter_list_off : Icons.filter_list),
-                  label: Text(widget.myProfile?.filters == null ? 'Filtra i risultati' : 'Modifica i filtri'),
-                  onPressed: () => showFilters(),
-                ),
-
-                // filter list
-                if (widget.myProfile?.filters?.km != null) ...[
-                  Chip(
-                    label: Text('${widget.myProfile!.filters!.km!}km'),
+    return StreamBuilder<MadFilter?>(
+      stream: storeFilter.getFilter(widget.myProfile?.profileData?.idFirebase),
+      builder: (context, snapFilter) => Column(
+        children: [
+          // filters
+          Card(
+            elevation: 2,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  // Show filters button
+                  OutlinedButton.icon(
+                    icon: Icon(snapFilter.data == null ? Icons.filter_list_off : Icons.filter_list),
+                    label: Text(snapFilter.data == null ? 'Filtra i risultati' : 'Modifica i filtri'),
+                    onPressed: () => showFilters(snapFilter.data),
                   ),
+
+                  // filter list
+                  if (snapFilter.data?.km != null) ...[
+                    Chip(
+                      label: Text('${snapFilter.data!.km!}km'),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ),
 
-        // list of mads
-        StreamBuilder<Iterable<MadData>>(
-          stream: storeMad.searchMads(
-            widget.myProfile?.profileData?.idFirebase,
-            widget.myProfile?.filters,
-            widget.myProfile?.madData?.geoFirePoint,
-            4,
-          ),
-          builder: (context, snapshot) {
-            final items = sortMads(snapshot.data);
+          // list of mads
+          StreamBuilder<Iterable<MadData>>(
+            stream: storeMad.searchMads(
+              widget.myProfile?.profileData?.idFirebase,
+              snapFilter.data,
+              widget.myProfile?.madData?.geoFirePoint,
+              4,
+            ),
+            builder: (context, snapshot) {
+              final items = sortMads(snapshot.data);
 
-            return items.isEmpty
-                ? NoElement(
-                    icon: Icons.explore,
-                    iconColor: Colors.blue,
-                    message: 'Nessun profilo trovato per i filtri applicati',
-                    onClickText: 'Modifica i filtri per la ricerca',
-                    onClick: () => showFilters(),
-                  )
-                : Expanded(
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      controller: scrollController,
-                      child: ListView.builder(
+              return items.isEmpty
+                  ? NoElement(
+                      icon: Icons.explore,
+                      iconColor: Colors.blue,
+                      message: 'Nessun profilo trovato per i filtri applicati',
+                      onClickText: 'Modifica i filtri per la ricerca',
+                      onClick: () => showFilters(snapFilter.data),
+                    )
+                  : Expanded(
+                      child: Scrollbar(
+                        thumbVisibility: true,
                         controller: scrollController,
-                        itemCount: items.length,
-                        itemBuilder: (context, index) => MadCard(
-                          myProfile: widget.myProfile!,
-                          mad: items[index],
-                          onTap: null,
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: items.length,
+                          itemBuilder: (context, index) => MadCard(
+                            myProfile: widget.myProfile!,
+                            mad: items[index],
+                            onTap: null,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-          },
-        ),
-      ],
+                    );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
