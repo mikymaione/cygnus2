@@ -7,6 +7,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+import 'package:cygnus2/ui/base/simple_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_auth.dart';
@@ -32,8 +33,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  final scrollController = ScrollController();
-
   final cSurname = TextEditingController();
   final cName = TextEditingController();
   final cEmail = TextEditingController();
@@ -56,8 +55,6 @@ class _SettingsState extends State<Settings> {
 
   @override
   void dispose() {
-    scrollController.dispose();
-
     cSurname.dispose();
     cName.dispose();
     cEmail.dispose();
@@ -98,160 +95,155 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      thumbVisibility: true,
-      controller: scrollController,
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Profile
-            Card(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title Profile
-                    const Text(
-                      'Profilo',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+    return SimpleScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Profile
+          Card(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title Profile
+                  const Text(
+                    'Profilo',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Surname
+                  TextEditor(
+                    label: 'Cognome',
+                    required: true,
+                    controller: cSurname,
+                    readOnly: true,
+                  ),
+
+                  // Nome
+                  TextEditor(
+                    label: 'Nome',
+                    required: true,
+                    controller: cName,
+                    readOnly: true,
+                  ),
+
+                  // Email
+                  TextEditor(
+                    label: 'Email',
+                    required: true,
+                    controller: cEmail,
+                    readOnly: true,
+                  ),
+
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () async => await logout(),
+                        child: const Text('Disconnetti'),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Surname
-                    TextEditor(
-                      label: 'Cognome',
-                      required: true,
-                      controller: cSurname,
-                      readOnly: true,
-                    ),
-
-                    // Nome
-                    TextEditor(
-                      label: 'Nome',
-                      required: true,
-                      controller: cName,
-                      readOnly: true,
-                    ),
-
-                    // Email
-                    TextEditor(
-                      label: 'Email',
-                      required: true,
-                      controller: cEmail,
-                      readOnly: true,
-                    ),
-
-                    // Buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () async => await logout(),
-                          child: const Text('Disconnetti'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Commons.navigate(
-                            context: context,
-                            builder: (context) => ProfileEdit(
-                              myProfile: widget.myProfile,
-                            ),
+                      ElevatedButton(
+                        onPressed: () => Commons.navigate(
+                          context: context,
+                          builder: (context) => ProfileEdit(
+                            myProfile: widget.myProfile,
                           ),
-                          child: const Text('Modifica'),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Privacy and Terms
-            Card(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // Title Profile
-                    const Text(
-                      'Termini legali',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        child: const Text('Modifica'),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        await Commons.navigate(
-                          context: context,
-                          builder: (context) => const TermsAndConditions(),
-                        );
-                      },
-                      child: const Text('Termini e condizioni'),
-                    ),
-                    const SizedBox(height: 8),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        await Commons.navigate(
-                          context: context,
-                          builder: (context) => const PrivacyPolicy(),
-                        );
-                      },
-                      child: const Text('Politica sulla riservatezza'),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
+          ),
 
-            // About
-            Card(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // Title Profile
-                    const Text(
-                      'Cygnus2',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          // Privacy and Terms
+          Card(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Title Profile
+                  const Text(
+                    'Termini legali',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
+                  ),
+                  const SizedBox(height: 16),
 
-                    FutureBuilder<String>(
-                      future: getVersion(),
-                      builder: (context, snapshot) => Text('Versione ${snapshot.data}'),
-                    ),
-                    const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await Commons.navigate(
+                        context: context,
+                        builder: (context) => const TermsAndConditions(),
+                      );
+                    },
+                    child: const Text('Termini e condizioni'),
+                  ),
+                  const SizedBox(height: 8),
 
-                    Image.asset(
-                      'assets/icon/MAD.png',
-                      width: 50.0,
-                      height: 50.0,
-                      fit: BoxFit.cover,
-                    ),
-
-                    const SizedBox(height: 16),
-                    const Text('© 2024, [MAIONE MIKY]'),
-                  ],
-                ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await Commons.navigate(
+                        context: context,
+                        builder: (context) => const PrivacyPolicy(),
+                      );
+                    },
+                    child: const Text('Politica sulla riservatezza'),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+
+          // About
+          Card(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Title Profile
+                  const Text(
+                    'Cygnus2',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  FutureBuilder<String>(
+                    future: getVersion(),
+                    builder: (context, snapshot) => Text('Versione ${snapshot.data}'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  Image.asset(
+                    'assets/icon/MAD.png',
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+
+                  const SizedBox(height: 16),
+                  const Text('© 2024, [MAIONE MIKY]'),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

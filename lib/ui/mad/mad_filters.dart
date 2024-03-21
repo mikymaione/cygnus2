@@ -12,6 +12,7 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
+import 'package:cygnus2/ui/base/simple_scrollview.dart';
 import 'package:cygnus2/ui/forms/slider_editor.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,6 @@ class MadFilters extends StatefulWidget {
 class _MadFiltersState extends State<MadFilters> {
   final formKey = GlobalKey<FormState>();
 
-  final scrollController = ScrollController();
-
   final cKm = GenericController<double>();
 
   @override
@@ -46,8 +45,6 @@ class _MadFiltersState extends State<MadFilters> {
 
   @override
   void dispose() {
-    scrollController.dispose();
-
     cKm.dispose();
 
     super.dispose();
@@ -95,41 +92,36 @@ class _MadFiltersState extends State<MadFilters> {
   Widget build(BuildContext context) {
     return Screen(
       title: 'Filtra profili',
-      body: Scrollbar(
-        thumbVisibility: true,
-        controller: scrollController,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // distance
-                  SliderEditor(
-                    controller: cKm,
-                  ),
+      body: SimpleScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: formKey,
+            autovalidateMode: AutovalidateMode.always,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // distance
+                SliderEditor(
+                  controller: cKm,
+                ),
 
-                  // save button
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      OutlinedButton(
-                        child: const Text('Cancella filtri'),
-                        onPressed: () => clear(),
-                      ),
-                      ElevatedButton(
-                        child: const Text('Applica filtri'),
-                        onPressed: () => search(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                // save button
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton(
+                      child: const Text('Cancella filtri'),
+                      onPressed: () => clear(),
+                    ),
+                    ElevatedButton(
+                      child: const Text('Applica filtri'),
+                      onPressed: () => search(),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

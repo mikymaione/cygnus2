@@ -20,19 +20,12 @@ class Stats extends StatefulWidget {
 }
 
 class _StatsState extends State<Stats> {
-  final scrollController = ScrollController();
   final storeStats = StoreStats();
 
   @override
   void initState() {
     super.initState();
     storeStats.updateStats();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   @override

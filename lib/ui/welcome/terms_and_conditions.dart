@@ -7,26 +7,14 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+import 'package:cygnus2/ui/base/simple_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:cygnus2/ui/base/screen.dart';
 
-class TermsAndConditions extends StatefulWidget {
+class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _TermsAndConditionsState();
-}
-
-class _TermsAndConditionsState extends State<TermsAndConditions> {
-  final scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,28 +23,23 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
       body: FutureBuilder<String>(
         future: rootBundle.loadString('assets/documents/terms_and_conditions.md'),
         builder: (context, snapshot) => snapshot.hasData
-            ? Scrollbar(
-                thumbVisibility: true,
-                controller: scrollController,
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: [
-                      Markdown(
-                        selectable: true,
-                        data: snapshot.requireData,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+            ? SimpleScrollView(
+                child: Column(
+                  children: [
+                    Markdown(
+                      selectable: true,
+                      data: snapshot.requireData,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 24),
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Indietro'),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 24),
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Indietro'),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               )
             : const Center(

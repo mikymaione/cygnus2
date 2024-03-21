@@ -11,6 +11,7 @@ import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/store_auth.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
+import 'package:cygnus2/ui/base/simple_scrollview.dart';
 import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/utility.dart';
@@ -25,8 +26,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final scrollController = ScrollController();
-
   final formKey = GlobalKey<FormState>();
 
   final cSurname = TextEditingController();
@@ -36,8 +35,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    scrollController.dispose();
-
     cSurname.dispose();
     cName.dispose();
     cEmail.dispose();
@@ -101,73 +98,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Screen(
       title: 'Registrazione',
-      body: Scrollbar(
-        thumbVisibility: true,
-        controller: scrollController,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Surname
-                  TextEditor(
-                    label: 'Cognome',
-                    required: true,
-                    minLength: 2,
-                    maxLength: 100,
-                    controller: cSurname,
-                    keyboardType: TextInputType.name,
-                    autofocus: true,
-                    textCapitalization: TextCapitalization.words,
-                  ),
+      body: SimpleScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Surname
+                TextEditor(
+                  label: 'Cognome',
+                  required: true,
+                  minLength: 2,
+                  maxLength: 100,
+                  controller: cSurname,
+                  keyboardType: TextInputType.name,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                ),
 
-                  // Nome
-                  TextEditor(
-                    label: 'Nome',
-                    required: true,
-                    minLength: 2,
-                    maxLength: 100,
-                    controller: cName,
-                    keyboardType: TextInputType.name,
-                    textCapitalization: TextCapitalization.words,
-                  ),
+                // Nome
+                TextEditor(
+                  label: 'Nome',
+                  required: true,
+                  minLength: 2,
+                  maxLength: 100,
+                  controller: cName,
+                  keyboardType: TextInputType.name,
+                  textCapitalization: TextCapitalization.words,
+                ),
 
-                  // Email
-                  TextEditor(
-                    label: 'Email',
-                    required: true,
-                    minLength: 10,
-                    maxLength: 320,
-                    controller: cEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (email) => Utility.validateEmail(email),
-                  ),
+                // Email
+                TextEditor(
+                  label: 'Email',
+                  required: true,
+                  minLength: 10,
+                  maxLength: 320,
+                  controller: cEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (email) => Utility.validateEmail(email),
+                ),
 
-                  // Password
-                  TextEditor(
-                    label: 'Password',
-                    required: true,
-                    minLength: 8,
-                    maxLength: 128,
-                    obscureText: true,
-                    controller: cPassword,
-                  ),
+                // Password
+                TextEditor(
+                  label: 'Password',
+                  required: true,
+                  minLength: 8,
+                  maxLength: 128,
+                  obscureText: true,
+                  controller: cPassword,
+                ),
 
-                  // check button
-                  ElevatedButton(
-                    child: const Text('Registrati'),
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        await register();
-                      }
-                    },
-                  ),
-                ],
-              ),
+                // check button
+                ElevatedButton(
+                  child: const Text('Registrati'),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      await register();
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ),

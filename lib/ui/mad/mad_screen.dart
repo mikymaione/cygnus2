@@ -13,6 +13,7 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
+import 'package:cygnus2/ui/base/simple_scrollview.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
 import 'package:cygnus2/ui/mad/mad_crud.dart';
 import 'package:cygnus2/ui/mad/profile_pictures.dart';
@@ -34,15 +35,7 @@ class MadScreen extends StatefulWidget {
 }
 
 class _MadScreenState extends State<MadScreen> {
-  final scrollController = ScrollController();
-
   bool get userIsBlocked => widget.myProfile.idsBlocked.contains(widget.mad.personId);
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
 
   Future<void> messageWith() async {
     final store = StoreMessages();
@@ -127,30 +120,25 @@ class _MadScreenState extends State<MadScreen> {
           onPressed: () => askToContact(),
         ),
       ],
-      body: Scrollbar(
-        thumbVisibility: true,
-        controller: scrollController,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // images
-                ProfilePictures(
-                  readOnly: true,
-                  idProfile: widget.mad.personId,
-                ),
+      body: SimpleScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // images
+              ProfilePictures(
+                readOnly: true,
+                idProfile: widget.mad.personId,
+              ),
 
-                // data
-                MadCrud(
-                  readOnly: true,
-                  myProfile: widget.myProfile,
-                  mad: widget.mad,
-                ),
-              ],
-            ),
+              // data
+              MadCrud(
+                readOnly: true,
+                myProfile: widget.myProfile,
+                mad: widget.mad,
+              ),
+            ],
           ),
         ),
       ),
