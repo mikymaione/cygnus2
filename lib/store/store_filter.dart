@@ -7,39 +7,32 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:cygnus2/data_structures/blocked_data.dart';
-import 'package:cygnus2/data_structures/mad_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/mad_filter.dart';
-import 'package:cygnus2/data_structures/profile_data.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
+import 'package:cygnus2/store/base_store.dart';
+import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:cygnus2/utility/commons.dart';
 
-class MyData {
-  final MadData? madData;
-  final MadFilter? filters;
-  final GeoFirePoint? myLocation;
-  final ProfileData profileData;
-  final Iterable<Blocked> blockedMe, blockedByMe;
+class StoreFilter extends BaseStore {
+  //
+  Future<String> saveFilter(MadFilter m) => save(
+        FirebaseTables.filter,
+        m.idFirebase,
+        m.toJson(),
+      );
 
-  Set<String> get idsBlocked {
-    final s = <String>{};
-
-    for (final h in blockedMe) {
-      s.addAll(h.items);
-    }
-
-    for (final h in blockedByMe) {
-      s.addAll(h.items);
-    }
-
-    return s;
+  Stream<MadFilter?> getFilter(String? personId) {
+    return FirebaseFirestore.instance
+        .collection(
+          FirebaseTables.filter.name,
+        )
+        .doc(personId)
+        .snapshots()
+        .handleError(
+          (e) => Commons.printIfInDebug('Error in "getFilter": $e'),
+        )
+        .map(
+          (json) => MadFilter.fromNullableJson(json.id, json.data()),
+        );
   }
-
-  const MyData({
-    required this.madData,
-    required this.filters,
-    required this.myLocation,
-    required this.profileData,
-    required this.blockedMe,
-    required this.blockedByMe,
-  });
 }

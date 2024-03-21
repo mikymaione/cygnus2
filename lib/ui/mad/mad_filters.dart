@@ -7,17 +7,21 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+import 'package:cygnus2/data_structures/mad_filter.dart';
+import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/store/store_filter.dart';
+import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
-import 'package:cygnus2/ui/forms/text_editor.dart';
-import 'package:cygnus2/ui/mad/mad_filter.dart';
+import 'package:cygnus2/ui/forms/slider_editor.dart';
+import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
 class MadFilters extends StatefulWidget {
-  final MadFilter? filters;
+  final MyData myProfile;
 
   const MadFilters({
     super.key,
-    required this.filters,
+    required this.myProfile,
   });
 
   @override
@@ -29,45 +33,59 @@ class _MadFiltersState extends State<MadFilters> {
 
   final scrollController = ScrollController();
 
-  final cCityNames = TextEditingController();
+  final cKm = GenericController<double>();
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.filters != null) {
-      if (widget.filters!.city != null) {
-        cCityNames.text = widget.filters!.city!;
-      }
-    }
+    cKm.value = widget.myProfile.filters?.km?.toDouble();
   }
 
   @override
   void dispose() {
     scrollController.dispose();
 
-    cCityNames.dispose();
+    cKm.dispose();
 
     super.dispose();
   }
 
-  void clear() {
-    if (mounted) {
-      final filters = MadFilter.empty();
-      Navigator.pop(context, filters);
+  Future<void> save(MadFilter f) async {
+    final storeFilter = StoreFilter();
+
+    try {
+      await storeFilter.saveFilter(f);
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        Msg.showError(context, e);
+      }
     }
+  }
+
+  void clear() {
+    final f = MadFilter(
+      idFirebase: widget.myProfile.profileData.idFirebase,
+      cleared: true,
+      km: cKm.value?.ceil(),
+    );
+
+    save(f);
   }
 
   void search() {
     if (true == formKey.currentState?.validate()) {
-      final filters = MadFilter(
+      final f = MadFilter(
+        idFirebase: widget.myProfile.profileData.idFirebase,
         cleared: false,
-        city: cCityNames.text.isNotEmpty ? cCityNames.text : null,
+        km: cKm.value?.ceil(),
       );
 
-      if (mounted) {
-        Navigator.pop(context, filters);
-      }
+      save(f);
     }
   }
 
@@ -88,12 +106,9 @@ class _MadFiltersState extends State<MadFilters> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // City
-                  const SizedBox(height: 16),
-                  TextEditor(
-                    label: 'Posizione',
-                    controller: cCityNames,
-                    required: true,
+                  // distance
+                  SliderEditor(
+                    controller: cKm,
                   ),
 
                   // save button

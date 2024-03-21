@@ -7,28 +7,57 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-import 'package:cygnus2/data_structures/my_data.dart';
-import 'package:cygnus2/ui/mad/mad_filter.dart';
-import 'package:cygnus2/ui/mad/mad_list_filtered.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
-class MadList extends StatelessWidget {
-  final MyData? myProfile;
+class SliderEditor extends StatefulWidget {
+  final GenericController<double> controller;
 
-  final GenericController<MadFilter> filters;
-
-  const MadList({
+  const SliderEditor({
     super.key,
-    this.myProfile,
-    required this.filters,
+    required this.controller,
   });
 
   @override
+  State<SliderEditor> createState() => _SliderEditorState();
+}
+
+class _SliderEditorState extends State<SliderEditor> {
+  int get curValue => widget.controller.value?.ceil() ?? 1;
+
+  late int kmInTitle = curValue;
+
+  @override
   Widget build(BuildContext context) {
-    return MadListFiltered(
-      myProfile: myProfile,
-      filters: filters,
+    return Container(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title
+          Text(
+            'Distanza da te ($kmInTitle km)',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+
+          Slider(
+            min: 1,
+            max: 500,
+            divisions: 100,
+            label: '$curValue km',
+            value: widget.controller.value ?? 1,
+            onChangeEnd: (km) => setState(
+              () => kmInTitle = curValue,
+            ),
+            onChanged: (km) => setState(
+              () => widget.controller.value = km,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

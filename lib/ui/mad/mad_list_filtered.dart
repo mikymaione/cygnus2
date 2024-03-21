@@ -13,20 +13,16 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:cygnus2/ui/mad/mad_card.dart';
-import 'package:cygnus2/ui/mad/mad_filter.dart';
 import 'package:cygnus2/ui/mad/mad_filters.dart';
 import 'package:cygnus2/utility/commons.dart';
-import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
 class MadListFiltered extends StatefulWidget {
   final MyData? myProfile;
-  final GenericController<MadFilter> filters;
 
   const MadListFiltered({
     super.key,
     required this.myProfile,
-    required this.filters,
   });
 
   @override
@@ -44,19 +40,12 @@ class _MadListFilteredState extends State<MadListFiltered> {
     super.dispose();
   }
 
-  Future<void> showFilters() async {
-    // show filter screen
-    final f = await Commons.navigate<MadFilter>(
-      context: context,
-      builder: (context) => MadFilters(
-        filters: widget.filters.value,
-      ),
-    );
-
-    if (f != null) {
-      setState(() => widget.filters.value = f.cleared ? null : f);
-    }
-  }
+  Future<void> showFilters() async => await Commons.navigate<void>(
+        context: context,
+        builder: (context) => MadFilters(
+          myProfile: widget.myProfile!,
+        ),
+      );
 
   List<MadData> sortMads(Iterable<MadData>? mads) => mads == null
       ? const <MadData>[]
@@ -80,18 +69,16 @@ class _MadListFilteredState extends State<MadListFiltered> {
               children: [
                 // Show filters button
                 OutlinedButton.icon(
-                  icon: Icon(widget.filters.value == null ? Icons.filter_list_off : Icons.filter_list),
-                  label: Text(widget.filters.value == null ? 'Filtra i risultati' : 'Modifica i filtri'),
+                  icon: Icon(widget.myProfile?.filters == null ? Icons.filter_list_off : Icons.filter_list),
+                  label: Text(widget.myProfile?.filters == null ? 'Filtra i risultati' : 'Modifica i filtri'),
                   onPressed: () => showFilters(),
                 ),
 
                 // filter list
-                if (widget.filters.value != null) ...[
-                  if (widget.filters.value!.city != null) ...[
-                    Chip(
-                      label: Text(widget.filters.value!.city!),
-                    ),
-                  ],
+                if (widget.myProfile?.filters?.km != null) ...[
+                  Chip(
+                    label: Text('${widget.myProfile!.filters!.km!}km'),
+                  ),
                 ],
               ],
             ),
@@ -102,7 +89,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
         StreamBuilder<Iterable<MadData>>(
           stream: storeMad.searchMads(
             widget.myProfile?.profileData.idFirebase,
-            widget.filters.value,
+            widget.myProfile?.filters,
             widget.myProfile?.madData?.geoFirePoint,
             4,
           ),

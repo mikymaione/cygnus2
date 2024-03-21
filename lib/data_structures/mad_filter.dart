@@ -7,19 +7,34 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-class MadFilter {
-  final bool cleared;
-  final String? city;
+import 'package:cygnus2/data_structures/base_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-  const MadFilter({
+part 'mad_filter.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class MadFilter {
+  @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
+  String? idFirebase;
+
+  final bool cleared;
+  final int? km;
+
+  MadFilter({
+    required this.idFirebase,
     required this.cleared,
-    required this.city,
+    required this.km,
   });
 
-  factory MadFilter.empty() => const MadFilter(
-        cleared: true,
-        city: null,
+  bool get noFilterSet => km == null;
+
+  Map<String, dynamic> toJson() => _$MadFilterToJson(this);
+
+  factory MadFilter.fromJson(String idFirebase, Map<String, dynamic> json) => BaseData.fromJson<MadFilter>(
+        idFirebase,
+        json,
+        (j) => _$MadFilterFromJson(j),
       );
 
-  bool get noFilterSet => city == null;
+  static MadFilter? fromNullableJson(String idFirebase, Map<String, dynamic>? json) => json == null ? null : MadFilter.fromJson(idFirebase, json);
 }

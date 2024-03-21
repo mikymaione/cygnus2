@@ -11,11 +11,9 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_push_notifications.dart';
 import 'package:cygnus2/ui/chats/chats.dart';
 import 'package:cygnus2/ui/mad/mad_container.dart';
-import 'package:cygnus2/ui/mad/mad_filter.dart';
-import 'package:cygnus2/ui/mad/mad_list.dart';
+import 'package:cygnus2/ui/mad/mad_list_filtered.dart';
 import 'package:cygnus2/ui/profile/settings.dart';
 import 'package:cygnus2/ui/stats/stats.dart';
-import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -53,8 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<bool> _onWillPop() async => false;
 
-  final filters = GenericController<MadFilter>();
-
   late final storePushNotifications = StorePushNotifications(
     getContext: () => context,
   );
@@ -76,12 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     storePushNotifications.init();
-  }
-
-  @override
-  void dispose() {
-    filters.dispose();
-    super.dispose();
   }
 
   @override
@@ -120,9 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               // list of profiles in system
-              MadList(
+              MadListFiltered(
                 myProfile: widget.myProfile,
-                filters: filters,
               ),
 
               // my chats

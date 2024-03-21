@@ -8,6 +8,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/data_structures/mad_data.dart';
+import 'package:cygnus2/data_structures/mad_filter.dart';
+import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/utility/location_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,6 +54,7 @@ class _Cygnus2State extends State<Cygnus2> {
   Widget build(BuildContext context) {
     final storeAuth = StoreAuth();
     final storeMad = StoreMad();
+    final storeFilter = StoreFilter();
     final storeBlocked = StoreBlocked();
 
     return StreamBuilder<User?>(
@@ -78,31 +81,35 @@ class _Cygnus2State extends State<Cygnus2> {
             ? const Welcome()
             : StreamBuilder<ProfileData>(
                 stream: storeAuth.loadMyProfile(storeAuth.currentUser?.uid ?? snapAuth.requireData!.uid),
-                builder: (context, snapProfile) => StreamBuilder<Iterable<Blocked>>(
-                  stream: storeBlocked.loadBlockedByMe(snapProfile.data?.idFirebase),
-                  builder: (context, snapBlockedByMe) => StreamBuilder<Iterable<Blocked>>(
-                    stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
-                    builder: (context, snapHaveBlockedMe) => StreamBuilder<MadData?>(
-                      stream: storeMad.getMad(snapProfile.data?.idFirebase),
-                      builder: (context, snapMyMad) => FutureBuilder<GeoFirePoint?>(
-                        future: getCurrentLocation(snapProfile.data?.idFirebase),
-                        builder: (context, snapLocation) => snapLocation.hasError
-                            ? EmptyHomePage(
-                                label: 'Errore: ${snapLocation.error}',
-                              )
-                            : !snapLocation.hasData || !snapMyMad.hasData || !snapProfile.hasData || !snapBlockedByMe.hasData || !snapHaveBlockedMe.hasData
-                                ? const EmptyHomePage(
-                                    label: 'Caricamento…',
-                                  )
-                                : MyHomePage(
-                                    myProfile: MyData(
-                                      madData: snapMyMad.requireData,
-                                      myLocation: snapLocation.requireData,
-                                      profileData: snapProfile.requireData,
-                                      blockedByMe: snapBlockedByMe.requireData,
-                                      blockedMe: snapHaveBlockedMe.requireData,
+                builder: (context, snapProfile) => FutureBuilder<GeoFirePoint?>(
+                  future: getCurrentLocation(snapProfile.data?.idFirebase),
+                  builder: (context, snapLocation) => StreamBuilder<Iterable<Blocked>>(
+                    stream: storeBlocked.loadBlockedByMe(snapProfile.data?.idFirebase),
+                    builder: (context, snapBlockedByMe) => StreamBuilder<Iterable<Blocked>>(
+                      stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
+                      builder: (context, snapHaveBlockedMe) => StreamBuilder<MadData?>(
+                        stream: storeMad.getMad(snapProfile.data?.idFirebase),
+                        builder: (context, snapMyMad) => StreamBuilder<MadFilter?>(
+                          stream: storeFilter.getFilter(snapProfile.data?.idFirebase),
+                          builder: (context, snapFilter) => snapLocation.hasError
+                              ? EmptyHomePage(
+                                  label: 'Errore: ${snapLocation.error}',
+                                )
+                              : !snapFilter.hasData || !snapLocation.hasData || !snapMyMad.hasData || !snapProfile.hasData || !snapBlockedByMe.hasData || !snapHaveBlockedMe.hasData
+                                  ? const EmptyHomePage(
+                                      label: 'Caricamento…',
+                                    )
+                                  : MyHomePage(
+                                      myProfile: MyData(
+                                        madData: snapMyMad.requireData,
+                                        filters: snapFilter.requireData,
+                                        myLocation: snapLocation.requireData,
+                                        profileData: snapProfile.requireData,
+                                        blockedByMe: snapBlockedByMe.requireData,
+                                        blockedMe: snapHaveBlockedMe.requireData,
+                                      ),
                                     ),
-                                  ),
+                        ),
                       ),
                     ),
                   ),

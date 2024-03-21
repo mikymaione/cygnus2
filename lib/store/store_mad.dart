@@ -10,9 +10,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
+import 'package:cygnus2/data_structures/mad_filter.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
-import 'package:cygnus2/ui/mad/mad_filter.dart';
 import 'package:cygnus2/utility/commons.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
