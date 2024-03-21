@@ -33,7 +33,7 @@ class MadData {
   final String department;
 
   // GeoFirePoint.data
-  final dynamic location;
+  final Map<String, dynamic> location;
 
   GeoPoint get geoPoint => location['geopoint'] as GeoPoint;
 

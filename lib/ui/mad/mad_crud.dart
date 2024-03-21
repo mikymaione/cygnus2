@@ -13,9 +13,11 @@ import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/date_editor.dart';
+import 'package:cygnus2/ui/forms/location_editor.dart';
 import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class MadCrudEditor extends StatefulWidget {
   final bool readOnly, showSendMsgButton;
@@ -89,6 +91,8 @@ class _MadCrudState extends State<MadCrud> {
   final cUniversity = TextEditingController();
   final cDepartment = TextEditingController();
 
+  final cLocation = GenericController<GeoFirePoint>();
+
   String? getImageByIndex(List<ImageData> images, int i) => i < images.length ? images[i].base64Image : null;
 
   @override
@@ -101,6 +105,8 @@ class _MadCrudState extends State<MadCrud> {
 
     cUniversity.text = widget.mad?.university ?? '';
     cDepartment.text = widget.mad?.department ?? '';
+
+    cLocation.value = widget.mad?.geoFirePoint;
   }
 
   @override
@@ -111,6 +117,8 @@ class _MadCrudState extends State<MadCrud> {
 
     cUniversity.dispose();
     cDepartment.dispose();
+
+    cLocation.dispose();
 
     super.dispose();
   }
@@ -126,7 +134,7 @@ class _MadCrudState extends State<MadCrud> {
           bio: cBio.text,
           university: cUniversity.text,
           department: cDepartment.text,
-          location: widget.myProfile.myLocation!.data,
+          location: cLocation.value!.data,
           created: DateTime.now(),
         );
 
@@ -208,15 +216,8 @@ class _MadCrudState extends State<MadCrud> {
             readOnly: widget.readOnly,
           ),
 
-          const Text(
-            'Posizione (obbligatorio)',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Lat: ${widget.myProfile.myLocation!.latitude}, Lon: ${widget.myProfile.myLocation!.longitude}',
+          LocationEditor(
+            controller: cLocation,
           ),
 
           // save button

@@ -11,12 +11,10 @@ import 'package:cygnus2/data_structures/blocked_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/mad_filter.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class MyData {
   final MadData? madData;
   final MadFilter? filters;
-  final GeoFirePoint? myLocation;
   final ProfileData? profileData;
   final Iterable<Blocked>? blockedMe, blockedByMe;
 
@@ -41,7 +39,6 @@ class MyData {
   const MyData({
     required this.madData,
     required this.filters,
-    required this.myLocation,
     required this.profileData,
     required this.blockedMe,
     required this.blockedByMe,
