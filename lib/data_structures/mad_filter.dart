@@ -15,12 +15,12 @@ part 'mad_filter.g.dart';
 @JsonSerializable(explicitToJson: true)
 class MadFilter {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  String? idFirebase;
+  final String? idFirebase;
 
   final bool cleared;
   final int? km;
 
-  MadFilter({
+  const MadFilter({
     required this.idFirebase,
     required this.cleared,
     required this.km,

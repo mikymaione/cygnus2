@@ -131,7 +131,7 @@ class _MadCrudState extends State<MadCrud> {
         );
 
         final storeMad = StoreMad();
-        m.idFirebase = await storeMad.saveMad(m);
+        await storeMad.saveMad(m);
 
         if (mounted) {
           Msg.showOk(context, 'Salvato!');

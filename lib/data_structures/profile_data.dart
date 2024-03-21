@@ -23,7 +23,7 @@ class ProfileData {
   final String surname, name;
   final bool? admin;
 
-  ProfileData({
+  const ProfileData({
     required this.idFirebase,
     required this.created,
     required this.surname,

@@ -15,12 +15,12 @@ part 'image_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ImageData {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  String? idFirebase;
+  final String? idFirebase;
 
   final String base64Image;
-  int order;
+  final int order;
 
-  ImageData({
+  const ImageData({
     required this.idFirebase,
     required this.order,
     required this.base64Image,

@@ -15,13 +15,13 @@ part 'blocked_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Blocked {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  String? idFirebase;
+  final String? idFirebase;
 
   final String id1, id2;
 
   Set<String> get items => {id1, id2};
 
-  Blocked({
+  const Blocked({
     required this.idFirebase,
     required this.id1,
     required this.id2,

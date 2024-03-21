@@ -18,7 +18,7 @@ part 'mad_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class MadData {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  String? idFirebase;
+  final String? idFirebase;
 
   final DateTime created;
 
@@ -50,7 +50,7 @@ class MadData {
 
   String get ageS => '$age years';
 
-  MadData({
+  const MadData({
     required this.idFirebase,
     required this.created,
     required this.personId,

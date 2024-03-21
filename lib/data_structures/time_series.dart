@@ -14,7 +14,7 @@ class TimeElement {
   final DateTime date;
   final int value;
 
-  TimeElement({
+  const TimeElement({
     required this.date,
     required this.value,
   });
@@ -24,7 +24,7 @@ class TimeSerie {
   final String name;
   final List<TimeElement> items;
 
-  TimeSerie({
+  const TimeSerie({
     required this.name,
     required this.items,
   });
@@ -75,7 +75,7 @@ class TimeSeries {
         (a, b) => a.name.compareTo(b.name) * -1,
       );
 
-  TimeSeries({
+  const TimeSeries({
     required this.items,
   });
 }

@@ -16,7 +16,7 @@ part 'chat_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ChatData {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  String? idFirebase;
+  final String? idFirebase;
 
   final String chatId, senderId, text;
   final DateTime data;
@@ -27,7 +27,7 @@ class ChatData {
 
   bool isMine(String personId) => senderId == personId;
 
-  ChatData({
+  const ChatData({
     required this.idFirebase,
     required this.chatId,
     required this.senderId,
