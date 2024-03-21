@@ -27,38 +27,37 @@ class NoElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            color: iconColor,
-            size: 48,
-          ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: iconColor,
+          size: 48,
+        ),
 
+        // Space
+        const SizedBox(height: 8),
+
+        // msg
+        Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 22,
+          ),
+        ),
+
+        if (onClick != null && onClickText != null) ...[
           // Space
-          const SizedBox(height: 8),
-
-          // msg
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 22,
-            ),
-          ),
-
-          if (onClick != null && onClickText != null) ...[
-            // Space
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onClick,
-              child: Text(onClickText!),
-            )
-          ],
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: onClick,
+            child: Text(onClickText!),
+          )
         ],
-      ),
+      ],
     );
   }
 }

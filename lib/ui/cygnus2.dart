@@ -14,6 +14,7 @@ import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/store_auth.dart';
 import 'package:cygnus2/store/store_blocked.dart';
 import 'package:cygnus2/store/store_mad.dart';
+import 'package:cygnus2/ui/welcome/empty_home.dart';
 import 'package:cygnus2/ui/welcome/home.dart';
 import 'package:cygnus2/ui/welcome/welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,23 +59,31 @@ class _Cygnus2State extends State<Cygnus2> {
             ? const Welcome()
             : StreamBuilder<ProfileData>(
                 stream: storeAuth.loadMyProfile(storeAuth.currentUser?.uid ?? snapAuth.requireData!.uid),
-                builder: (context, snapProfile) => StreamBuilder<Iterable<Blocked>>(
-                  stream: storeBlocked.loadBlockedByMe(snapProfile.data?.idFirebase),
-                  builder: (context, snapBlockedByMe) => StreamBuilder<Iterable<Blocked>>(
-                    stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
-                    builder: (context, snapHaveBlockedMe) => StreamBuilder<MadData?>(
-                      stream: storeMad.getMad(snapProfile.data?.idFirebase),
-                      builder: (context, snapMyMad) => MyHomePage(
-                        myProfile: MyData(
-                          madData: snapMyMad.data,
-                          profileData: snapProfile.data,
-                          blockedByMe: snapBlockedByMe.data,
-                          blockedMe: snapHaveBlockedMe.data,
-                        ),
+                builder: (context, snapProfile) => !snapProfile.hasData
+                    ? const EmptyHomePage()
+                    : StreamBuilder<Iterable<Blocked>>(
+                        stream: storeBlocked.loadBlockedByMe(snapProfile.data?.idFirebase),
+                        builder: (context, snapBlockedByMe) => !snapBlockedByMe.hasData
+                            ? const EmptyHomePage()
+                            : StreamBuilder<Iterable<Blocked>>(
+                                stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
+                                builder: (context, snapHaveBlockedMe) => !snapHaveBlockedMe.hasData
+                                    ? const EmptyHomePage()
+                                    : StreamBuilder<MadData?>(
+                                        stream: storeMad.getMad(snapProfile.data?.idFirebase),
+                                        builder: (context, snapMyMad) => !snapMyMad.hasData
+                                            ? const EmptyHomePage()
+                                            : MyHomePage(
+                                                myProfile: MyData(
+                                                  madData: snapMyMad.data,
+                                                  profileData: snapProfile.data,
+                                                  blockedByMe: snapBlockedByMe.data,
+                                                  blockedMe: snapHaveBlockedMe.data,
+                                                ),
+                                              ),
+                                      ),
+                              ),
                       ),
-                    ),
-                  ),
-                ),
               ),
       ),
     );
