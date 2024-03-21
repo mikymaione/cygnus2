@@ -51,7 +51,7 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> setBlock(bool blocked) async {
-    final myId = widget.myProfile.profileData.idFirebase;
+    final myId = widget.myProfile.profileData!.idFirebase;
     final id = widget.chatsData.interlocutorId(myId);
     final name = widget.chatsData.interlocutorName(myId);
 
@@ -73,7 +73,7 @@ class _ChatState extends State<Chat> {
           final storeBlocked = StoreBlocked();
           await storeBlocked.saveBlocked(b);
         } else {
-          final blockedByMe = widget.myProfile.blockedByMe.where(
+          final blockedByMe = widget.myProfile.blockedByMe!.where(
             (b) => b.id2 == id,
           );
 
@@ -111,7 +111,7 @@ class _ChatState extends State<Chat> {
         final m = ChatData(
           idFirebase: null,
           chatId: widget.chatsData.idFirebase!,
-          senderId: widget.myProfile.profileData.idFirebase,
+          senderId: widget.myProfile.profileData!.idFirebase,
           text: text,
           data: DateTime.now(),
         );
@@ -142,12 +142,12 @@ class _ChatState extends State<Chat> {
     return m;
   }
 
-  bool get userIsBlocked => widget.myProfile.idsBlocked.contains(widget.chatsData.interlocutorId(widget.myProfile.profileData.idFirebase));
+  bool get userIsBlocked => widget.myProfile.idsBlocked.contains(widget.chatsData.interlocutorId(widget.myProfile.profileData?.idFirebase));
 
   @override
   Widget build(BuildContext context) {
     final languageCode = Localizations.localeOf(context).languageCode;
-    final interlocutorName = widget.chatsData.interlocutorName(widget.myProfile.profileData.idFirebase);
+    final interlocutorName = widget.chatsData.interlocutorName(widget.myProfile.profileData?.idFirebase);
 
     return Screen(
       title: interlocutorName,
@@ -188,7 +188,7 @@ class _ChatState extends State<Chat> {
                       return Row(
                         children: [
                           // space on left
-                          if (chat.isMine(widget.myProfile.profileData.idFirebase)) ...[
+                          if (chat.isMine(widget.myProfile.profileData?.idFirebase)) ...[
                             Flexible(
                               flex: 1,
                               child: Container(),
@@ -200,7 +200,7 @@ class _ChatState extends State<Chat> {
                             child: Card(
                               child: Container(
                                 padding: const EdgeInsets.all(8),
-                                color: chat.isMine(widget.myProfile.profileData.idFirebase) ? chatBackgroundDark : chatBackgroundLight,
+                                color: chat.isMine(widget.myProfile.profileData?.idFirebase) ? chatBackgroundDark : chatBackgroundLight,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -231,7 +231,7 @@ class _ChatState extends State<Chat> {
                           ),
 
                           // space on right
-                          if (!chat.isMine(widget.myProfile.profileData.idFirebase)) ...[
+                          if (!chat.isMine(widget.myProfile.profileData?.idFirebase)) ...[
                             Flexible(
                               flex: 1,
                               child: Container(),

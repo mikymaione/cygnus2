@@ -39,9 +39,9 @@ class _MadCardState extends State<MadCard> {
   Future<void> messageWith() async {
     final store = StoreMessages();
 
-    final existingChat = await store.findChat(widget.myProfile.profileData.idFirebase, widget.mad.personId);
+    final existingChat = await store.findChat(widget.myProfile.profileData!.idFirebase, widget.mad.personId);
 
-    Commons.printIfInDebug('findChat(${widget.myProfile.profileData.idFirebase}, ${widget.mad.personId}): ${existingChat?.idFirebase}');
+    Commons.printIfInDebug('findChat(${widget.myProfile.profileData!.idFirebase}, ${widget.mad.personId}): ${existingChat?.idFirebase}');
 
     if (existingChat == null) {
       // new
@@ -49,15 +49,15 @@ class _MadCardState extends State<MadCard> {
         idFirebase: null,
         created: DateTime.now(),
         interlocutorsIds: {
-          widget.myProfile.profileData.idFirebase,
+          widget.myProfile.profileData!.idFirebase,
           widget.mad.personId,
         },
         interlocutorsIdsMap: {
-          widget.myProfile.profileData.idFirebase: true,
+          widget.myProfile.profileData!.idFirebase: true,
           widget.mad.personId: true,
         },
         interlocutors: {
-          widget.myProfile.profileData.idFirebase: widget.myProfile.madData!.nickname,
+          widget.myProfile.profileData!.idFirebase: widget.myProfile.madData!.nickname,
           widget.mad.personId: widget.mad.nickname,
         },
         lastMessageText: '',

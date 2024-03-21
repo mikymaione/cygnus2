@@ -38,14 +38,14 @@ class ChatsData {
 
   String info(String languageCode) => Utility.datetimeYMMMMDHm(languageCode, lastMessageData) + (lastMessageText.isEmpty ? '' : ' - $lastMessageText');
 
-  String interlocutorId(String myId) => interlocutors.entries
+  String interlocutorId(String? myId) => interlocutors.entries
       .where(
         (e) => e.key != myId,
       )
       .first
       .key;
 
-  String interlocutorName(String myId) => interlocutors.entries
+  String interlocutorName(String? myId) => interlocutors.entries
       .where(
         (e) => e.key != myId,
       )

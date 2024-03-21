@@ -45,7 +45,7 @@ class _ChatsState extends State<Chats> {
     final languageCode = Localizations.localeOf(context).languageCode;
 
     return StreamBuilder<Iterable<ChatsData>>(
-      stream: storeMessages.loadMyChats(widget.myProfile?.profileData.idFirebase),
+      stream: storeMessages.loadMyChats(widget.myProfile?.profileData?.idFirebase),
       builder: (context, snapChats) {
         final items = snapChats.data?.toList(growable: false) ?? const <ChatsData>[];
         final count = snapChats.data?.length ?? 0;
@@ -76,10 +76,10 @@ class _ChatsState extends State<Chats> {
                         ),
                         child: ListTile(
                           leading: MyProfilePicture(
-                            nickname: chat.interlocutorName(widget.myProfile!.profileData.idFirebase),
-                            personId: chat.interlocutorId(widget.myProfile!.profileData.idFirebase),
+                            nickname: chat.interlocutorName(widget.myProfile?.profileData?.idFirebase),
+                            personId: chat.interlocutorId(widget.myProfile?.profileData?.idFirebase),
                           ),
-                          title: Text(chat.interlocutorName(widget.myProfile!.profileData.idFirebase)),
+                          title: Text(chat.interlocutorName(widget.myProfile?.profileData?.idFirebase)),
                           subtitle: Text(
                             chat.info(languageCode),
                             maxLines: 1,

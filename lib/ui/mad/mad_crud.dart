@@ -38,10 +38,10 @@ class _MadCrudEditorState extends State<MadCrudEditor> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
-      stream: storeMad.madExists(widget.myProfile.profileData.idFirebase),
+      stream: storeMad.madExists(widget.myProfile.profileData?.idFirebase),
       builder: (context, snapExists) => snapExists.data == true
           ? StreamBuilder<MadData?>(
-              stream: storeMad.getMad(widget.myProfile.profileData.idFirebase),
+              stream: storeMad.getMad(widget.myProfile.profileData?.idFirebase),
               builder: (context, snapMad) => snapMad.hasData && snapMad.requireData != null
                   ? MadCrud(
                       readOnly: widget.readOnly,
@@ -119,8 +119,8 @@ class _MadCrudState extends State<MadCrud> {
     if (formKey.currentState!.validate()) {
       try {
         final m = MadData(
-          idFirebase: widget.myProfile.profileData.idFirebase,
-          personId: widget.myProfile.profileData.idFirebase,
+          idFirebase: widget.myProfile.profileData!.idFirebase,
+          personId: widget.myProfile.profileData!.idFirebase,
           nickname: cNickname.text,
           birthday: cBirthday.value!,
           bio: cBio.text,

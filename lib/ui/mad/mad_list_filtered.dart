@@ -88,7 +88,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
         // list of mads
         StreamBuilder<Iterable<MadData>>(
           stream: storeMad.searchMads(
-            widget.myProfile?.profileData.idFirebase,
+            widget.myProfile?.profileData?.idFirebase,
             widget.myProfile?.filters,
             widget.myProfile?.madData?.geoFirePoint,
             4,

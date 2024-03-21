@@ -42,7 +42,7 @@ class StoreMad extends BaseStore {
         m.toJson(),
       );
 
-  Stream<bool> madExists(String personId) {
+  Stream<bool> madExists(String? personId) {
     return FirebaseFirestore.instance
         .collection(
           FirebaseTables.myself.name,

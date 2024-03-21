@@ -31,7 +31,7 @@ class _ProfilePicturesState extends State<ProfilePictures> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ImageData>>(
-      stream: storeImages.getImages(widget.myProfile.profileData.idFirebase),
+      stream: storeImages.getImages(widget.myProfile.profileData?.idFirebase),
       builder: (context, snapImages) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,7 +41,7 @@ class _ProfilePicturesState extends State<ProfilePictures> {
                 for (var x = y * 3; x < 3 + (y * 3); x++) ...[
                   Expanded(
                     child: ImageSelector(
-                      idFirebaseMad: widget.myProfile.profileData.idFirebase,
+                      idFirebaseMad: widget.myProfile.profileData!.idFirebase,
                       imageData: x < (snapImages.data?.length ?? 0) ? snapImages.data?.elementAt(x) : null,
                       index: x,
                     ),

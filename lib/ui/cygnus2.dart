@@ -95,20 +95,16 @@ class _Cygnus2State extends State<Cygnus2> {
                               ? EmptyHomePage(
                                   label: 'Errore: ${snapLocation.error}',
                                 )
-                              : !snapFilter.hasData || !snapLocation.hasData || !snapMyMad.hasData || !snapProfile.hasData || !snapBlockedByMe.hasData || !snapHaveBlockedMe.hasData
-                                  ? const EmptyHomePage(
-                                      label: 'Caricamento…',
-                                    )
-                                  : MyHomePage(
-                                      myProfile: MyData(
-                                        madData: snapMyMad.requireData,
-                                        filters: snapFilter.requireData,
-                                        myLocation: snapLocation.requireData,
-                                        profileData: snapProfile.requireData,
-                                        blockedByMe: snapBlockedByMe.requireData,
-                                        blockedMe: snapHaveBlockedMe.requireData,
-                                      ),
-                                    ),
+                              : MyHomePage(
+                                  myProfile: MyData(
+                                    madData: snapMyMad.data,
+                                    filters: snapFilter.data,
+                                    myLocation: snapLocation.data,
+                                    profileData: snapProfile.data,
+                                    blockedByMe: snapBlockedByMe.data,
+                                    blockedMe: snapHaveBlockedMe.data,
+                                  ),
+                                ),
                         ),
                       ),
                     ),

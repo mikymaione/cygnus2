@@ -69,7 +69,7 @@ class _MadFiltersState extends State<MadFilters> {
 
   void clear() {
     final f = MadFilter(
-      idFirebase: widget.myProfile.profileData.idFirebase,
+      idFirebase: widget.myProfile.profileData?.idFirebase,
       cleared: true,
       km: cKm.value?.ceil(),
     );
@@ -80,7 +80,7 @@ class _MadFiltersState extends State<MadFilters> {
   void search() {
     if (true == formKey.currentState?.validate()) {
       final f = MadFilter(
-        idFirebase: widget.myProfile.profileData.idFirebase,
+        idFirebase: widget.myProfile.profileData?.idFirebase,
         cleared: false,
         km: cKm.value?.ceil(),
       );

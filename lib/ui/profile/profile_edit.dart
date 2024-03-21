@@ -42,8 +42,8 @@ class _ProfileEditState extends State<ProfileEdit> {
 
     final currentUser = storeAuth.currentUser;
 
-    cSurname.text = widget.myProfile.profileData.surname;
-    cName.text = widget.myProfile.profileData.name;
+    cSurname.text = widget.myProfile.profileData!.surname;
+    cName.text = widget.myProfile.profileData!.name;
 
     if (currentUser != null) {
       cEmail.text = storeAuth.currentUser!.email!;
@@ -70,7 +70,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
     if (ok) {
       try {
-        await storeAuth.deleteProfile(widget.myProfile.profileData.idFirebase);
+        await storeAuth.deleteProfile(widget.myProfile.profileData!.idFirebase);
 
         if (mounted) {
           Msg.showOk(context, "Profilo eliminato");
@@ -89,7 +89,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       final storeAuth = StoreAuth();
 
       final profileData = ProfileData(
-        idFirebase: widget.myProfile.profileData.idFirebase,
+        idFirebase: widget.myProfile.profileData!.idFirebase,
         created: DateTime.now(),
         surname: cSurname.text,
         name: cName.text,

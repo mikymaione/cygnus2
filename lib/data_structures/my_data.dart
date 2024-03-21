@@ -17,18 +17,22 @@ class MyData {
   final MadData? madData;
   final MadFilter? filters;
   final GeoFirePoint? myLocation;
-  final ProfileData profileData;
-  final Iterable<Blocked> blockedMe, blockedByMe;
+  final ProfileData? profileData;
+  final Iterable<Blocked>? blockedMe, blockedByMe;
 
   Set<String> get idsBlocked {
     final s = <String>{};
 
-    for (final h in blockedMe) {
-      s.addAll(h.items);
+    if (blockedMe != null) {
+      for (final h in blockedMe!) {
+        s.addAll(h.items);
+      }
     }
 
-    for (final h in blockedByMe) {
-      s.addAll(h.items);
+    if (blockedByMe != null) {
+      for (final h in blockedByMe!) {
+        s.addAll(h.items);
+      }
     }
 
     return s;

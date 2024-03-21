@@ -25,7 +25,7 @@ class ChatData {
 
   String dateFullSec(String languageCode) => Utility.datetimeYMMMMDHms(languageCode, data);
 
-  bool isMine(String personId) => senderId == personId;
+  bool isMine(String? personId) => senderId == personId;
 
   const ChatData({
     required this.idFirebase,

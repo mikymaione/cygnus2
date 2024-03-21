@@ -52,7 +52,7 @@ class StoreMessages extends BaseStore {
             );
   }
 
-  Future<ChatsData?> findChat(String myId, String interlocutor) async {
+  Future<ChatsData?> findChat(String? myId, String interlocutor) async {
     final ref = await FirebaseFirestore.instance
         .collection(FirebaseTables.chat.name)
         .where(
