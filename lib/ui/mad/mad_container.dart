@@ -50,13 +50,13 @@ class _MadContainerState extends State<MadContainer> {
             children: [
               // images
               ProfilePictures(
-                myProfile: widget.myProfile!,
+                readOnly: widget.readOnly,
+                idProfile: widget.myProfile?.profileData?.idFirebase,
               ),
 
               // data
               MadCrudEditor(
                 readOnly: widget.readOnly,
-                showSendMsgButton: widget.showSendMsgButton,
                 myProfile: widget.myProfile!,
               ),
             ],

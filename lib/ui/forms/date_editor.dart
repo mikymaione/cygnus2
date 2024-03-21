@@ -75,34 +75,41 @@ class _DateEditorState extends State<DateEditor> {
         const SizedBox(height: 4),
 
         // from
-        TextFormField(
-          controller: c1,
-          readOnly: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              if (widget.required) {
-                return 'Il campo ${widget.label} è obbligatorio';
+        if (widget.readOnly) ...[
+          Text(
+            c1.text,
+            textAlign: TextAlign.justify,
+          ),
+        ] else ...[
+          TextFormField(
+            controller: c1,
+            readOnly: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                if (widget.required) {
+                  return 'Il campo ${widget.label} è obbligatorio';
+                }
               }
-            }
 
-            return null;
-          },
-          onTap: widget.readOnly
-              ? null
-              : () async {
-                  final d = await selectDate(
-                    widget.controller.value ?? widget.maxValue,
-                    widget.minValue,
-                    widget.maxValue,
-                  );
+              return null;
+            },
+            onTap: widget.readOnly
+                ? null
+                : () async {
+                    final d = await selectDate(
+                      widget.controller.value ?? widget.maxValue,
+                      widget.minValue,
+                      widget.maxValue,
+                    );
 
-                  // d = 01/02/1998 00:00:00
-                  setState(() {
-                    widget.controller.value = d;
-                    setData();
-                  });
-                },
-        ),
+                    // d = 01/02/1998 00:00:00
+                    setState(() {
+                      widget.controller.value = d;
+                      setData();
+                    });
+                  },
+          ),
+        ],
 
         // space
         const SizedBox(height: 16),

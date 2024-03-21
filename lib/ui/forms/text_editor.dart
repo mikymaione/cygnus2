@@ -73,7 +73,10 @@ class _TextEditorState extends State<TextEditor> {
 
           // content
           if (widget.readOnly) ...[
-            Text(widget.controller.text),
+            Text(
+              widget.controller.text,
+              textAlign: TextAlign.justify,
+            ),
           ] else ...[
             TextFormField(
               textCapitalization: widget.textCapitalization,

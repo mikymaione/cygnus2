@@ -24,12 +24,14 @@ class ImageSelector extends StatefulWidget {
   final String idFirebaseMad;
   final ImageData? imageData;
   final int index;
+  final bool readOnly;
 
   const ImageSelector({
     super.key,
     required this.idFirebaseMad,
     required this.imageData,
     required this.index,
+    required this.readOnly,
   });
 
   @override
@@ -147,11 +149,13 @@ class _ImageSelectorState extends State<ImageSelector> {
             ],
 
             // controls
-            ImageControls(
-              thereIsFile: bytes != null,
-              onAdd: () => select(),
-              onDelete: () => remove(),
-            ),
+            if (!widget.readOnly) ...[
+              ImageControls(
+                thereIsFile: bytes != null,
+                onAdd: () => select(),
+                onDelete: () => remove(),
+              ),
+            ],
           ],
         ),
       ),

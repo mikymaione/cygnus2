@@ -14,10 +14,13 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class LocationEditor extends StatefulWidget {
   final GenericController<GeoFirePoint> controller;
+  final bool readOnly, required;
 
   const LocationEditor({
     super.key,
     required this.controller,
+    required this.readOnly,
+    required this.required,
   });
 
   @override
@@ -61,9 +64,9 @@ class _LocationEditorState extends State<LocationEditor> {
       builder: (formFieldState) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Posizione (obbligatorio)',
-            style: TextStyle(
+          Text(
+            'Posizione ${widget.required ? ' (obbligatorio)' : ''}',
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -74,10 +77,13 @@ class _LocationEditorState extends State<LocationEditor> {
             Text(description!),
             const SizedBox(height: 8),
           ],
-          ElevatedButton(
-            onPressed: loading ? null : () => updateLocation(),
-            child: const Text('Aggiorna la posizione'),
-          ),
+
+          if (!widget.readOnly) ...[
+            ElevatedButton(
+              onPressed: loading ? null : () => updateLocation(),
+              child: const Text('Aggiorna la posizione'),
+            ),
+          ],
         ],
       ),
     );

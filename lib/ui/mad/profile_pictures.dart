@@ -8,17 +8,18 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/data_structures/image_data.dart';
-import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_images.dart';
 import 'package:cygnus2/ui/forms/image_selector.dart';
 import 'package:flutter/widgets.dart';
 
 class ProfilePictures extends StatefulWidget {
-  final MyData myProfile;
+  final String? idProfile;
+  final bool readOnly;
 
   const ProfilePictures({
     super.key,
-    required this.myProfile,
+    required this.idProfile,
+    required this.readOnly,
   });
 
   @override
@@ -31,7 +32,7 @@ class _ProfilePicturesState extends State<ProfilePictures> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ImageData>>(
-      stream: storeImages.getImages(widget.myProfile.profileData?.idFirebase),
+      stream: storeImages.getImages(widget.idProfile),
       builder: (context, snapImages) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,7 +42,8 @@ class _ProfilePicturesState extends State<ProfilePictures> {
                 for (var x = y * 3; x < 3 + (y * 3); x++) ...[
                   Expanded(
                     child: ImageSelector(
-                      idFirebaseMad: widget.myProfile.profileData!.idFirebase,
+                      readOnly: widget.readOnly,
+                      idFirebaseMad: widget.idProfile!,
                       imageData: x < (snapImages.data?.length ?? 0) ? snapImages.data?.elementAt(x) : null,
                       index: x,
                     ),

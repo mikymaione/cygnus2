@@ -20,13 +20,12 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class MadCrudEditor extends StatefulWidget {
-  final bool readOnly, showSendMsgButton;
+  final bool readOnly;
   final MyData myProfile;
 
   const MadCrudEditor({
     super.key,
     required this.readOnly,
-    required this.showSendMsgButton,
     required this.myProfile,
   });
 
@@ -47,7 +46,6 @@ class _MadCrudEditorState extends State<MadCrudEditor> {
               builder: (context, snapMad) => snapMad.hasData && snapMad.requireData != null
                   ? MadCrud(
                       readOnly: widget.readOnly,
-                      showSendMsgButton: widget.showSendMsgButton,
                       myProfile: widget.myProfile,
                       mad: snapMad.requireData,
                     )
@@ -55,7 +53,6 @@ class _MadCrudEditorState extends State<MadCrudEditor> {
             )
           : MadCrud(
               readOnly: widget.readOnly,
-              showSendMsgButton: widget.showSendMsgButton,
               myProfile: widget.myProfile,
               mad: null,
             ),
@@ -64,14 +61,13 @@ class _MadCrudEditorState extends State<MadCrudEditor> {
 }
 
 class MadCrud extends StatefulWidget {
-  final bool readOnly, showSendMsgButton;
+  final bool readOnly;
   final MyData myProfile;
   final MadData? mad;
 
   const MadCrud({
     super.key,
     required this.readOnly,
-    required this.showSendMsgButton,
     required this.myProfile,
     required this.mad,
   });
@@ -169,7 +165,7 @@ class _MadCrudState extends State<MadCrud> {
           TextEditor(
             label: 'Nickname',
             controller: cNickname,
-            required: true,
+            required: !widget.readOnly,
             readOnly: widget.readOnly,
           ),
           const SizedBox(height: 8),
@@ -182,7 +178,7 @@ class _MadCrudState extends State<MadCrud> {
             maxValue: years18,
             languageCode: languageCode,
             readOnly: widget.readOnly,
-            required: true,
+            required: !widget.readOnly,
           ),
           const SizedBox(height: 16),
 
@@ -190,7 +186,7 @@ class _MadCrudState extends State<MadCrud> {
           TextEditor(
             label: 'Università',
             controller: cUniversity,
-            required: true,
+            required: !widget.readOnly,
             minLength: 5,
             maxLength: 500,
             readOnly: widget.readOnly,
@@ -200,7 +196,7 @@ class _MadCrudState extends State<MadCrud> {
           TextEditor(
             label: 'Dipartimento',
             controller: cDepartment,
-            required: true,
+            required: !widget.readOnly,
             minLength: 3,
             maxLength: 500,
             readOnly: widget.readOnly,
@@ -210,7 +206,7 @@ class _MadCrudState extends State<MadCrud> {
           TextEditor(
             label: 'Biografia',
             controller: cBio,
-            required: true,
+            required: !widget.readOnly,
             minLength: 3,
             maxLength: 500,
             readOnly: widget.readOnly,
@@ -218,6 +214,8 @@ class _MadCrudState extends State<MadCrud> {
 
           LocationEditor(
             controller: cLocation,
+            required: !widget.readOnly,
+            readOnly: widget.readOnly,
           ),
 
           // save button

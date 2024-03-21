@@ -120,7 +120,6 @@ class _MadListFilteredState extends State<MadListFiltered> {
                           itemBuilder: (context, index) => MadCard(
                             myProfile: widget.myProfile!,
                             mad: items[index],
-                            onTap: null,
                           ),
                         ),
                       ),
