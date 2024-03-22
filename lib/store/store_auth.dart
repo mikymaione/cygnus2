@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/utility/random_generator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,9 @@ class StoreAuth extends BaseStore {
   Future<void> logout() => FirebaseAuth.instance.signOut();
 
   Future<void> deleteProfile(String myId) async {
+    // chats & messages
+    await StoreMessages().deleteMyChats(myId);
+
     // mad & images
     await delete(FirebaseTables.myself, myId);
 

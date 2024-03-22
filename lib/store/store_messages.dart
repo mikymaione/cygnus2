@@ -15,6 +15,22 @@ import 'package:cygnus2/data_structures/chats_data.dart';
 
 class StoreMessages extends BaseStore {
   //
+  Future<void> deleteMyChats(String myId) async {
+    final ref = await FirebaseFirestore.instance
+        .collection(FirebaseTables.chat.name)
+        .where(
+          'interlocutorsIds',
+          arrayContains: myId,
+        )
+        .get();
+
+    final ids = ref.docs.map((d) => d.id);
+
+    for (final id in ids) {
+      await FirebaseFirestore.instance.collection(FirebaseTables.chat.name).doc(id).delete();
+    }
+  }
+
   Future<String> updateChat(String idFirebase, String lastMessageText) => save(
         FirebaseTables.chat,
         idFirebase,
@@ -73,18 +89,28 @@ class StoreMessages extends BaseStore {
         .firstOrNull;
   }
 
-  Future<String> saveMessage(ChatData m) => save(
-        FirebaseTables.message,
+  // messages
+  Future<String> saveMessage(String chatId, ChatData m) => save2(
+        FirebaseFirestore.instance
+            .collection(
+              FirebaseTables.chat.name,
+            )
+            .doc(chatId)
+            .collection(
+              FirebaseTables.message.name,
+            ),
         m.idFirebase,
         m.toJson(),
       );
 
   Stream<Iterable<ChatData>> loadChatContent(String chatId) {
     return FirebaseFirestore.instance
-        .collection(FirebaseTables.message.name)
-        .where(
-          'chatId',
-          isEqualTo: chatId,
+        .collection(
+          FirebaseTables.chat.name,
+        )
+        .doc(chatId)
+        .collection(
+          FirebaseTables.message.name,
         )
         .orderBy(
           'data',

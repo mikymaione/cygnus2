@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/stat_data.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:cygnus2/store/store_stats.dart';
 import 'package:cygnus2/utility/commons.dart';
 
 abstract class BaseStore {
@@ -26,7 +27,7 @@ abstract class BaseStore {
       await collection.doc(idFirebase).delete();
 
       // delete stat
-      if (collectionName != FirebaseTables.stats.name) {
+      if (StoreStats.tablesWithStats.contains(collectionName)) {
         Commons.printIfInDebug('Updating stats...');
 
         await delete(FirebaseTables.stats, idFirebase);
@@ -60,7 +61,8 @@ abstract class BaseStore {
 
         Commons.printIfInDebug('Firestore Add in "$collectionName": $json');
 
-        if (collectionName != FirebaseTables.stats.name) {
+        // update stats
+        if (StoreStats.tablesWithStats.contains(collectionName)) {
           Commons.printIfInDebug('Updating stats...');
 
           final s = StatData(

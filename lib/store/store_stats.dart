@@ -17,6 +17,11 @@ import 'package:cygnus2/store/firebase_tables.dart';
 
 class StoreStats extends BaseStore {
   //
+  static final tablesWithStats = Set<String>.unmodifiable([
+    FirebaseTables.profile.name,
+    FirebaseTables.chat.name,
+  ]);
+
   Stream<TimeSeries> stats() => _stats().map(
         (list) => _toTimeSeries(list),
       );

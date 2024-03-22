@@ -108,15 +108,17 @@ class _ChatState extends State<Chat> {
       textBoxController.text = '';
 
       try {
+        final chatId = widget.chatsData.idFirebase!;
+
         final m = ChatData(
           idFirebase: null,
-          chatId: widget.chatsData.idFirebase!,
+          chatId: chatId,
           senderId: widget.myProfile.profileData!.idFirebase,
           text: text,
           data: DateTime.now(),
         );
 
-        await storeMessages.saveMessage(m);
+        await storeMessages.saveMessage(chatId, m);
 
         storeMessages.updateChat(widget.chatsData.idFirebase!, text);
       } catch (e) {
