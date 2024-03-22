@@ -135,6 +135,8 @@ class _MadCrudState extends State<MadCrud> {
           department: cDepartment.text,
           location: cLocation.value!.data,
           address: cAddress.value!,
+          personWhoLikeMe: widget.mad?.personWhoLikeMe ?? {},
+          personWhoDislikeMe: widget.mad?.personWhoDislikeMe ?? {},
           created: DateTime.now(),
         );
 

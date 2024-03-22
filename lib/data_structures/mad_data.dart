@@ -29,12 +29,28 @@ class MadData {
 
   final String nickname;
   final String? bio;
-  final String university;
-  final String department;
+  final String university, department;
+
+  final Set<String> personWhoLikeMe, personWhoDislikeMe;
 
   // GeoFirePoint.data
   final Map<String, dynamic> location;
   final String address;
+
+  bool isLikedByMe(String personId) => personWhoLikeMe.contains(personId);
+
+  bool isDislikedByMe(String personId) => personWhoDislikeMe.contains(personId);
+
+  static bool canContact(MadData? a, MadData? b) {
+    if (a != null && b != null) {
+      final theyLikeMe = a.isLikedByMe(b.personId);
+      final iLikeThey = b.isLikedByMe(a.personId);
+
+      return iLikeThey && theyLikeMe;
+    }
+
+    return false;
+  }
 
   GeoPoint get geoPoint => location['geopoint'] as GeoPoint;
 
@@ -62,6 +78,8 @@ class MadData {
     required this.department,
     required this.location,
     required this.address,
+    required this.personWhoLikeMe,
+    required this.personWhoDislikeMe,
   });
 
   static MadData? fromNullableJson(String idFirebase, Map<String, dynamic>? json) => json == null ? null : MadData.fromJson(idFirebase, json);

@@ -13,12 +13,14 @@ class IconChip extends StatelessWidget {
   final List<String> labels;
   final IconData icon;
   final Color color;
+  final TextStyle? style;
 
   const IconChip({
     super.key,
     required this.labels,
     required this.icon,
     required this.color,
+    this.style,
   });
 
   @override
@@ -37,7 +39,10 @@ class IconChip extends StatelessWidget {
             ),
           ),
           for (final l in labels) ...[
-            TextSpan(text: l),
+            TextSpan(
+              text: l,
+              style: style,
+            ),
           ],
         ],
       ),

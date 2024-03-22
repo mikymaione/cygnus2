@@ -27,6 +27,8 @@ class MadCard extends StatelessWidget {
     required this.myProfile,
   });
 
+  bool get canContact => MadData.canContact(myProfile.madData, mad);
+
   @override
   Widget build(BuildContext context) {
     return Clickable(
@@ -59,12 +61,43 @@ class MadCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Nickname
-                    Text(
-                      mad.nickname,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                    if (canContact) ...[
+                      IconChip(
+                        icon: Icons.handshake,
+                        color: Colors.orange,
+                        labels: [mad.nickname],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                    ] else if (mad.isLikedByMe(myProfile.profileData!.idFirebase)) ...[
+                      IconChip(
+                        icon: Icons.thumb_up,
+                        color: Colors.pink,
+                        labels: [mad.nickname],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ] else if (mad.isDislikedByMe(myProfile.profileData!.idFirebase)) ...[
+                      IconChip(
+                        icon: Icons.thumb_down,
+                        color: Colors.blueGrey,
+                        labels: [mad.nickname],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ] else ...[
+                      IconChip(
+                        icon: Icons.person,
+                        color: Colors.black,
+                        labels: [mad.nickname],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
 
                     // space
                     const SizedBox(height: 8),
@@ -82,7 +115,7 @@ class MadCard extends StatelessWidget {
                     // University
                     IconChip(
                       icon: Icons.balance,
-                      color: Colors.amber,
+                      color: Colors.grey,
                       labels: [mad.university],
                     ),
 

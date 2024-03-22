@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/data_structures/chats_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/store/store_messages.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
@@ -109,15 +110,51 @@ class _MadScreenState extends State<MadScreen> {
     }
   }
 
+  Future<void> addLike(bool like) async {
+    final store = StoreMad();
+
+    try {
+      await store.addLike(
+        widget.myProfile.profileData!.idFirebase,
+        widget.mad,
+        like,
+      );
+
+      if (mounted) {
+        Navigator.pop(context);
+
+        if (like) {
+          Msg.showInfo(context, 'Like inviato!');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Msg.showError(context, e);
+      }
+    }
+  }
+
+  bool get canContact => MadData.canContact(widget.myProfile.madData, widget.mad);
+
   @override
   Widget build(BuildContext context) {
     return Screen(
       title: widget.mad.nickname,
       actions: [
         IconButton(
+          icon: const Icon(Icons.thumb_down),
+          tooltip: 'Non mi piace',
+          onPressed: widget.mad.isDislikedByMe(widget.myProfile.profileData!.idFirebase) ? null : () => addLike(false),
+        ),
+        IconButton(
+          icon: const Icon(Icons.thumb_up),
+          tooltip: 'Mi piace',
+          onPressed: widget.mad.isLikedByMe(widget.myProfile.profileData!.idFirebase) ? null : () => addLike(true),
+        ),
+        IconButton(
           icon: const Icon(Icons.message),
           tooltip: 'Contatta',
-          onPressed: () => askToContact(),
+          onPressed: canContact ? () => askToContact() : null,
         ),
       ],
       body: SimpleScrollView(

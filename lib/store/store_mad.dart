@@ -18,6 +18,18 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class StoreMad extends BaseStore {
   //
+  Future<String> addLike(String fromId, MadData m, bool like) async {
+    if (like) {
+      m.personWhoDislikeMe.remove(fromId);
+      m.personWhoLikeMe.add(fromId);
+    } else {
+      m.personWhoLikeMe.remove(fromId);
+      m.personWhoDislikeMe.add(fromId);
+    }
+
+    return await saveMad(m);
+  }
+
   Future<String> saveMad(MadData m) => save(
         FirebaseTables.myself,
         m.idFirebase,
