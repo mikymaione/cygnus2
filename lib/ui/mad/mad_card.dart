@@ -17,7 +17,7 @@ import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/utility.dart';
 import 'package:flutter/material.dart';
 
-class MadCard extends StatefulWidget {
+class MadCard extends StatelessWidget {
   final MyData myProfile;
   final MadData mad;
 
@@ -28,18 +28,13 @@ class MadCard extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _MadCardState();
-}
-
-class _MadCardState extends State<MadCard> {
-  @override
   Widget build(BuildContext context) {
     return Clickable(
       onTap: () => Commons.navigate<void>(
         context: context,
         builder: (context) => MadScreen(
-          myProfile: widget.myProfile,
-          mad: widget.mad,
+          myProfile: myProfile,
+          mad: mad,
         ),
       ),
       child: Card(
@@ -50,8 +45,8 @@ class _MadCardState extends State<MadCard> {
             children: [
               // Profile Picture
               MyProfilePicture(
-                nickname: widget.mad.nickname,
-                personId: widget.mad.personId,
+                nickname: mad.nickname,
+                personId: mad.personId,
                 size: 100,
               ),
 
@@ -65,7 +60,7 @@ class _MadCardState extends State<MadCard> {
                   children: [
                     // Nickname
                     Text(
-                      widget.mad.nickname,
+                      mad.nickname,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -78,7 +73,7 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.cake,
                       color: Colors.blue,
-                      labels: [widget.mad.ageS],
+                      labels: [mad.ageS],
                     ),
 
                     // space
@@ -88,7 +83,7 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.balance,
                       color: Colors.amber,
-                      labels: [widget.mad.university],
+                      labels: [mad.university],
                     ),
 
                     // space
@@ -98,7 +93,7 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.school,
                       color: Colors.brown,
-                      labels: [widget.mad.department],
+                      labels: [mad.department],
                     ),
 
                     // space
@@ -108,18 +103,18 @@ class _MadCardState extends State<MadCard> {
                     IconChip(
                       icon: Icons.location_pin,
                       color: Colors.red,
-                      labels: [widget.mad.distanceToS(widget.myProfile.madData?.geoPoint)],
+                      labels: [mad.distanceToS(myProfile.madData?.geoPoint)],
                     ),
 
                     // space
                     const SizedBox(height: 8),
 
                     // Bio
-                    if (widget.mad.bio != null && widget.mad.bio!.isNotEmpty) ...[
+                    if (mad.bio != null && mad.bio!.isNotEmpty) ...[
                       IconChip(
                         icon: Icons.book,
                         color: Colors.green,
-                        labels: [Utility.left(widget.mad.bio, 50)],
+                        labels: [Utility.left(mad.bio, 50)],
                       ),
                     ],
                   ],
