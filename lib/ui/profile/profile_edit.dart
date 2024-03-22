@@ -8,6 +8,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/ui/base/elevated_wait_button.dart';
+import 'package:cygnus2/ui/otp/login_screen.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:flutter/material.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
@@ -71,11 +73,20 @@ class _ProfileEditState extends State<ProfileEdit> {
 
     if (ok) {
       try {
-        await storeAuth.deleteProfile(widget.myProfile.profileData!.idFirebase);
-
         if (mounted) {
-          Msg.showOk(context, "Profilo eliminato");
-          Navigator.pop(context);
+          final ok = await Commons.navigate<bool>(
+            context: context,
+            builder: (context) => const LoginScreen(),
+          );
+
+          if (ok == true) {
+            await storeAuth.deleteProfile(widget.myProfile.profileData!.idFirebase);
+
+            if (mounted) {
+              Msg.showOk(context, "Profilo eliminato");
+              Navigator.pop(context);
+            }
+          }
         }
       } catch (e) {
         if (mounted) {

@@ -26,6 +26,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final storeAuth = StoreAuth();
+
   final formKey = GlobalKey<FormState>();
 
   final cEmail = TextEditingController();
@@ -41,8 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> recoveryPassword() async {
     if (true == formKey.currentState?.validate()) {
-      final storeAuth = StoreAuth();
-
       try {
         await storeAuth.sendPasswordResetEmail(
           cEmail.text,
@@ -61,8 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> enter() async {
     if (true == formKey.currentState?.validate()) {
-      final storeAuth = StoreAuth();
-
       try {
         final maybeUser = await storeAuth.login(
           cEmail.text,
@@ -82,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           } else {
             if (mounted) {
-              Navigator.pop(context);
+              Navigator.pop(context, true);
             }
           }
         }
@@ -140,17 +138,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text('Accedi'),
                     onPressed: () async => await enter(),
                   ),
-                  OutlinedButton(
-                    child: const Text('Registrati'),
-                    onPressed: () => Commons.navigate(
-                      context: context,
-                      builder: (context) => const RegisterScreen(),
+                  if (storeAuth.currentUser == null) ...[
+                    OutlinedButton(
+                      child: const Text('Registrati'),
+                      onPressed: () => Commons.navigate(
+                        context: context,
+                        builder: (context) => const RegisterScreen(),
+                      ),
                     ),
-                  ),
-                  OutlinedButton(
-                    child: const Text('Recupero Password'),
-                    onPressed: () async => await recoveryPassword(),
-                  ),
+                    OutlinedButton(
+                      child: const Text('Recupero Password'),
+                      onPressed: () async => await recoveryPassword(),
+                    ),
+                  ],
                 ],
               ),
             ],
