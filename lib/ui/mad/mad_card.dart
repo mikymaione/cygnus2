@@ -9,6 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/ui/base/Clickable.dart';
 import 'package:cygnus2/ui/mad/icon_chip.dart';
 import 'package:cygnus2/ui/mad/mad_screen.dart';
 import 'package:cygnus2/ui/mad/my_profile_picture.dart';
@@ -33,15 +34,15 @@ class MadCard extends StatefulWidget {
 class _MadCardState extends State<MadCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: () => Commons.navigate(
-          context: context,
-          builder: (context) => MadScreen(
-            myProfile: widget.myProfile,
-            mad: widget.mad,
-          ),
+    return Clickable(
+      onTap: () => Commons.navigate<void>(
+        context: context,
+        builder: (context) => MadScreen(
+          myProfile: widget.myProfile,
+          mad: widget.mad,
         ),
+      ),
+      child: Card(
         child: Container(
           padding: const EdgeInsets.all(8),
           child: Row(

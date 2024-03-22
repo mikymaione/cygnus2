@@ -11,6 +11,7 @@ import 'package:cygnus2/data_structures/chats_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/store/store_messages.dart';
+import 'package:cygnus2/ui/base/Clickable.dart';
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
 import 'package:cygnus2/ui/mad/my_profile_picture.dart';
@@ -65,15 +66,15 @@ class _ChatsState extends State<Chats> {
                   itemBuilder: (context, index) {
                     final chat = items[index];
 
-                    return Card(
-                      child: InkWell(
-                        onTap: () => Commons.navigate(
-                          context: context,
-                          builder: (context) => Chat(
-                            chatsData: chat,
-                            myProfile: widget.myProfile!,
-                          ),
+                    return Clickable(
+                      onTap: () => Commons.navigate<void>(
+                        context: context,
+                        builder: (context) => Chat(
+                          chatsData: chat,
+                          myProfile: widget.myProfile!,
                         ),
+                      ),
+                      child: Card(
                         child: ListTile(
                           leading: MyProfilePicture(
                             nickname: chat.interlocutorName(widget.myProfile?.profileData?.idFirebase),
