@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/utility/commons.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:location/location.dart';
+import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 
 class LocationService {
   //
@@ -65,5 +66,21 @@ class LocationService {
     }
 
     return await _location.getLocation();
+  }
+
+  Future<Address?> addressByGeoPoint(GeoPoint? p) async {
+    if (p != null) {
+      final coordinate = Coordinate(latitude: p.latitude, longitude: p.longitude);
+
+      try {
+        final geocoding = await NominatimGeocoding.to.reverseGeoCoding(coordinate);
+
+        return geocoding.address;
+      } catch (e) {
+        Commons.printIfInDebug(e);
+      }
+    }
+
+    return null;
   }
 }

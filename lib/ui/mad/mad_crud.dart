@@ -88,6 +88,7 @@ class _MadCrudState extends State<MadCrud> {
   final cDepartment = TextEditingController();
 
   final cLocation = GenericController<GeoFirePoint>();
+  final cAddress = GenericController<String>();
 
   String? getImageByIndex(List<ImageData> images, int i) => i < images.length ? images[i].base64Image : null;
 
@@ -103,6 +104,7 @@ class _MadCrudState extends State<MadCrud> {
     cDepartment.text = widget.mad?.department ?? '';
 
     cLocation.value = widget.mad?.geoFirePoint;
+    cAddress.value = widget.mad?.address;
   }
 
   @override
@@ -131,6 +133,7 @@ class _MadCrudState extends State<MadCrud> {
           university: cUniversity.text,
           department: cDepartment.text,
           location: cLocation.value!.data,
+          address: cAddress.value!,
           created: DateTime.now(),
         );
 
@@ -214,6 +217,7 @@ class _MadCrudState extends State<MadCrud> {
 
           LocationEditor(
             controller: cLocation,
+            controllerA: cAddress,
             required: !widget.readOnly,
             readOnly: widget.readOnly,
           ),

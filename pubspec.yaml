@@ -38,6 +38,7 @@ dependencies:
   intl: ^0.18.1
   json_annotation: ^4.8.1
   location: ^5.0.3
+  nominatim_geocoding: ^0.0.6
   package_info_plus: ^4.2.0
   recase: ^4.1.0
 

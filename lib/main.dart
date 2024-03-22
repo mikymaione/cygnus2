@@ -10,6 +10,7 @@ import 'package:cygnus2/firebase_options.dart';
 import 'package:cygnus2/ui/cygnus2.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 
 Future<void> main() async {
   FlutterError.onError = (details) => FlutterError.presentError(details);
@@ -17,6 +18,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NominatimGeocoding.init(reqCacheNum: 20);
 
   runApp(const Cygnus2());
 }

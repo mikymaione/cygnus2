@@ -34,6 +34,7 @@ class MadData {
 
   // GeoFirePoint.data
   final Map<String, dynamic> location;
+  final String address;
 
   GeoPoint get geoPoint => location['geopoint'] as GeoPoint;
 
@@ -60,6 +61,7 @@ class MadData {
     required this.university,
     required this.department,
     required this.location,
+    required this.address,
   });
 
   static MadData? fromNullableJson(String idFirebase, Map<String, dynamic>? json) => json == null ? null : MadData.fromJson(idFirebase, json);
