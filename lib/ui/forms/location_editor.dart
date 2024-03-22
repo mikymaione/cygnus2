@@ -36,6 +36,8 @@ class _LocationEditorState extends State<LocationEditor> {
   var loading = false;
   String? description;
 
+  bool get somethingSelected => widget.controller.value != null;
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +60,7 @@ class _LocationEditorState extends State<LocationEditor> {
     return 'Lat: ${l.latitude}, Lon: ${l.longitude}';
   }
 
-  Future<void> updateLocation() async {
+  Future<void> updateLocation(FormFieldState<bool> formFieldState) async {
     setState(() {
       loading = true;
 
@@ -77,6 +79,8 @@ class _LocationEditorState extends State<LocationEditor> {
 
       description = a;
 
+      formFieldState.didChange(somethingSelected);
+
       loading = false;
     });
   }
@@ -84,7 +88,7 @@ class _LocationEditorState extends State<LocationEditor> {
   @override
   Widget build(BuildContext context) {
     return FormField<bool>(
-      initialValue: widget.controller.value != null,
+      initialValue: somethingSelected,
       validator: (ok) => ok == true ? null : 'Selezionare una posizione',
       builder: (formFieldState) {
         final themeData = Theme.of(formFieldState.context);
@@ -108,7 +112,7 @@ class _LocationEditorState extends State<LocationEditor> {
             if (!widget.readOnly) ...[
               const SizedBox(height: 8),
               ElevatedWaitButton(
-                onPressed: () async => await updateLocation(),
+                onPressed: () async => await updateLocation(formFieldState),
                 child: const Text('Aggiorna la posizione'),
               ),
             ],
