@@ -123,7 +123,7 @@ class _MadCrudState extends State<MadCrud> {
   }
 
   Future<void> save() async {
-    if (formKey.currentState!.validate()) {
+    if (true == formKey.currentState?.validate()) {
       try {
         final m = MadData(
           idFirebase: widget.myProfile.profileData!.idFirebase,

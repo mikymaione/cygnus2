@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> register() async {
-    if (formKey.currentState!.validate()) {
+    if (true == formKey.currentState?.validate()) {
       final storeAuth = StoreAuth();
 
       try {

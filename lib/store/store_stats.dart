@@ -10,99 +10,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cygnus2/data_structures/chats_data.dart';
-import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/data_structures/stat_data.dart';
 import 'package:cygnus2/data_structures/time_series.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
-import 'package:cygnus2/utility/commons.dart';
 
 class StoreStats extends BaseStore {
   //
-  Future<DateTime?> _lastUpdatedStat() async {
-    final ref = await FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.stats.name,
-        )
-        .orderBy('data', descending: true)
-        .limit(1)
-        .get();
-
-    final lastStat = ref.docs
-        .map(
-          (json) => StatData.fromJson(json.id, json.data()),
-        )
-        .firstOrNull;
-
-    return lastStat?.data;
-  }
-
-  Future<void> updateStats() async {
-    Commons.printIfInDebug('updateStats');
-
-    final lastUpdatedStat = await _lastUpdatedStat();
-    Commons.printIfInDebug('lastUpdatedStat: $lastUpdatedStat');
-
-    final chats = await _getChats(lastUpdatedStat);
-    Commons.printIfInDebug('chats: ${chats.length}');
-
-    for (final c in chats) {
-      final s = StatData(
-        idFirebase: null,
-        name: FirebaseTables.chat.name,
-        data: c,
-      );
-
-      await save(FirebaseTables.stats, s.idFirebase, s.toJson());
-    }
-
-    final profiles = await _getProfiles(lastUpdatedStat);
-    Commons.printIfInDebug('profiles: ${profiles.length}');
-
-    for (final c in profiles) {
-      final s = StatData(
-        idFirebase: null,
-        name: FirebaseTables.profile.name,
-        data: c,
-      );
-
-      await save(FirebaseTables.stats, s.idFirebase, s.toJson());
-    }
-  }
-
-  Future<Iterable<DateTime>> _getChats(DateTime? after) async {
-    final ref = await FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.chat.name,
-        )
-        .where(
-          'created',
-          isGreaterThanOrEqualTo: after,
-        )
-        .get();
-
-    return ref.docs.map(
-      (json) => ChatsData.fromJson(json.id, json.data()).created,
-    );
-  }
-
-  Future<Iterable<DateTime>> _getProfiles(DateTime? after) async {
-    final ref = await FirebaseFirestore.instance
-        .collection(
-          FirebaseTables.profile.name,
-        )
-        .where(
-          'created',
-          isGreaterThanOrEqualTo: after,
-        )
-        .get();
-
-    return ref.docs.map(
-      (json) => ProfileData.fromJson(json.id, json.data()).created,
-    );
-  }
-
   Stream<TimeSeries> stats() => _stats().map(
         (list) => _toTimeSeries(list),
       );

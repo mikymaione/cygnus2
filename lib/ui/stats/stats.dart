@@ -23,12 +23,6 @@ class _StatsState extends State<Stats> {
   final storeStats = StoreStats();
 
   @override
-  void initState() {
-    super.initState();
-    storeStats.updateStats();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<TimeSeries>(
       stream: storeStats.stats(),

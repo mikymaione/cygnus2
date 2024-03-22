@@ -86,7 +86,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   }
 
   Future<void> save() async {
-    if (formKey.currentState!.validate()) {
+    if (true == formKey.currentState?.validate()) {
       final storeAuth = StoreAuth();
 
       final profileData = ProfileData(
@@ -113,8 +113,6 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-
     return Screen(
       title: 'Profilo',
       body: Container(
@@ -162,7 +160,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   ElevatedWaitButton(
                     onPressed: () async => await delete(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: themeData.colorScheme.error,
+                      backgroundColor: Colors.redAccent,
                     ),
                     child: const Text('Elimina'),
                   ),

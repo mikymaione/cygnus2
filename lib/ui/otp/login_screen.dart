@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> recoveryPassword() async {
-    if (formKey.currentState!.validate()) {
+    if (true == formKey.currentState?.validate()) {
       final storeAuth = StoreAuth();
 
       try {
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> enter() async {
-    if (formKey.currentState!.validate()) {
+    if (true == formKey.currentState?.validate()) {
       final storeAuth = StoreAuth();
 
       try {

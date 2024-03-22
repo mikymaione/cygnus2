@@ -11,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
-import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/utility/random_generator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -25,24 +24,18 @@ class StoreAuth extends BaseStore {
 
   Future<void> logout() => FirebaseAuth.instance.signOut();
 
-  Future<int> deleteProfile(String myId) async {
-    var x = 0;
+  Future<void> deleteProfile(String myId) async {
+    // mad & images
+    await delete(FirebaseTables.myself, myId);
 
-    final storeMad = StoreMad();
-    final mads = await storeMad.loadMyMads(myId).toList();
+    // filter
+    await delete(FirebaseTables.filter, myId);
 
-    for (final items in mads) {
-      for (final m in items) {
-        await storeMad.deleteMad(m.idFirebase!);
-        x++;
-      }
-    }
-
+    // profile
     await delete(FirebaseTables.profile, myId);
 
+    // auth
     await FirebaseAuth.instance.currentUser?.delete();
-
-    return x;
   }
 
   Future<String> saveProfile(ProfileData m) => save(

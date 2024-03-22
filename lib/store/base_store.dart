@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cygnus2/data_structures/stat_data.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
 import 'package:cygnus2/utility/commons.dart';
 
@@ -17,7 +18,24 @@ abstract class BaseStore {
         idFirebase,
       );
 
-  Future<void> delete2(CollectionReference collection, String idFirebase) => collection.doc(idFirebase).delete();
+  Future<void> delete2(CollectionReference collection, String idFirebase) async {
+    final collectionName = collection.id;
+
+    try {
+      // delete entity
+      await collection.doc(idFirebase).delete();
+
+      // delete stat
+      if (collectionName != FirebaseTables.stats.name) {
+        Commons.printIfInDebug('Updating stats...');
+
+        await delete(FirebaseTables.stats, idFirebase);
+      }
+    } catch (e) {
+      Commons.printIfInDebug('Firestore Delete Error: $e');
+      rethrow;
+    }
+  }
 
   Future<String> save(FirebaseTables table, String? idFirebase, Map<String, dynamic> json, {bool merge = false}) {
     final tableName = table.name;
@@ -42,6 +60,18 @@ abstract class BaseStore {
 
         Commons.printIfInDebug('Firestore Add in "$collectionName": $json');
 
+        if (collectionName != FirebaseTables.stats.name) {
+          Commons.printIfInDebug('Updating stats...');
+
+          final s = StatData(
+            idFirebase: R.id,
+            name: collectionName,
+            data: DateTime.now(),
+          );
+
+          await save(FirebaseTables.stats, s.idFirebase, s.toJson());
+        }
+
         return R.id;
       } else {
         await collection
@@ -59,7 +89,6 @@ abstract class BaseStore {
       }
     } catch (e) {
       Commons.printIfInDebug('Firestore Save Error: $e');
-
       rethrow;
     }
   }

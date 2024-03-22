@@ -15,7 +15,7 @@ part 'stat_data.g.dart';
 @JsonSerializable(explicitToJson: true)
 class StatData {
   @JsonKey(toJson: BaseData.toNull, includeIfNull: false)
-  final String? idFirebase;
+  final String idFirebase;
 
   final String name;
   final DateTime data;

@@ -18,24 +18,6 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
 class StoreMad extends BaseStore {
   //
-  Future<void> deleteMad(String idFirebase) => delete(
-        FirebaseTables.myself,
-        idFirebase,
-      );
-
-  Future<void> updateLocation(String idFirebase, GeoFirePoint? location) async {
-    if (location != null) {
-      await StoreMad().save(
-        FirebaseTables.myself,
-        idFirebase,
-        {
-          'location': location.data,
-        },
-        merge: true,
-      );
-    }
-  }
-
   Future<String> saveMad(MadData m) => save(
         FirebaseTables.myself,
         m.idFirebase,
@@ -149,20 +131,5 @@ class StoreMad extends BaseStore {
     } else {
       return _searchMads(myId, filter, myLocation, radius);
     }
-  }
-
-  Stream<Iterable<MadData>> loadMyMads(String? myId) {
-    return myId == null
-        ? const Stream<Iterable<MadData>>.empty()
-        : FirebaseFirestore.instance
-            .collection(
-              FirebaseTables.myself.name,
-            )
-            .snapshots()
-            .map(
-              (ref) => ref.docs.map(
-                (json) => MadData.fromJson(json.id, json.data()),
-              ),
-            );
   }
 }
