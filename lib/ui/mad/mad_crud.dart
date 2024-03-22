@@ -11,6 +11,7 @@ import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
+import 'package:cygnus2/ui/base/elevated_wait_button.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/date_editor.dart';
 import 'package:cygnus2/ui/forms/location_editor.dart';
@@ -225,8 +226,8 @@ class _MadCrudState extends State<MadCrud> {
           // save button
           if (!widget.readOnly) ...[
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => save(),
+            ElevatedWaitButton(
+              onPressed: () async => await save(),
               child: const Text('Salva'),
             ),
           ],

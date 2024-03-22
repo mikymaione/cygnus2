@@ -11,7 +11,7 @@ import 'package:cygnus2/data_structures/chats_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/store/store_messages.dart';
-import 'package:cygnus2/ui/base/Clickable.dart';
+import 'package:cygnus2/ui/base/clickable.dart';
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:cygnus2/ui/chats/chat.dart';
 import 'package:cygnus2/ui/mad/my_profile_picture.dart';

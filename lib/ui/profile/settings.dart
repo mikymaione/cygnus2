@@ -183,23 +183,19 @@ class _SettingsState extends State<Settings> {
                   const SizedBox(height: 16),
 
                   ElevatedButton(
-                    onPressed: () async {
-                      await Commons.navigate(
-                        context: context,
-                        builder: (context) => const TermsAndConditions(),
-                      );
-                    },
+                    onPressed: () => Commons.navigate(
+                      context: context,
+                      builder: (context) => const TermsAndConditions(),
+                    ),
                     child: const Text('Termini e condizioni'),
                   ),
                   const SizedBox(height: 8),
 
                   ElevatedButton(
-                    onPressed: () async {
-                      await Commons.navigate(
-                        context: context,
-                        builder: (context) => const PrivacyPolicy(),
-                      );
-                    },
+                    onPressed: () => Commons.navigate(
+                      context: context,
+                      builder: (context) => const PrivacyPolicy(),
+                    ),
                     child: const Text('Politica sulla riservatezza'),
                   ),
                 ],

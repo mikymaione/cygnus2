@@ -9,6 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/store_auth.dart';
+import 'package:cygnus2/ui/base/elevated_wait_button.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
 import 'package:cygnus2/ui/base/simple_scrollview.dart';
@@ -44,52 +45,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> register() async {
-    final storeAuth = StoreAuth();
+    if (formKey.currentState!.validate()) {
+      final storeAuth = StoreAuth();
 
-    try {
-      final systemOtp = await storeAuth.sendSignInLinkToEmail(cEmail.text);
+      try {
+        final systemOtp = await storeAuth.sendSignInLinkToEmail(cEmail.text);
 
-      if (mounted) {
-        final userOtp = await InputDialog.show(
-          context: context,
-          title: 'Codice OTP ricevuto via email',
-        );
-
-        if (systemOtp == userOtp) {
-          final maybeUser = await storeAuth.createUser(
-            cEmail.text,
-            cPassword.text,
+        if (mounted) {
+          final userOtp = await InputDialog.show(
+            context: context,
+            title: 'Codice OTP ricevuto via email',
           );
 
-          if (maybeUser == null) {
-            if (mounted) {
-              Msg.showErrorMsg(context, 'Registrazione fallita!');
-            }
-          } else {
-            final profileData = ProfileData(
-              idFirebase: maybeUser.uid,
-              created: DateTime.now(),
-              surname: cSurname.text,
-              name: cName.text,
+          if (systemOtp == userOtp) {
+            final maybeUser = await storeAuth.createUser(
+              cEmail.text,
+              cPassword.text,
             );
 
-            await storeAuth.saveProfile(profileData);
+            if (maybeUser == null) {
+              if (mounted) {
+                Msg.showErrorMsg(context, 'Registrazione fallita!');
+              }
+            } else {
+              final profileData = ProfileData(
+                idFirebase: maybeUser.uid,
+                created: DateTime.now(),
+                surname: cSurname.text,
+                name: cName.text,
+              );
 
+              await storeAuth.saveProfile(profileData);
+
+              if (mounted) {
+                Navigator.pop(context); // RegisterScreen
+                Navigator.pop(context); // LoginScreen
+              }
+            }
+          } else {
             if (mounted) {
-              Navigator.pop(context); // RegisterScreen
-              Navigator.pop(context); // LoginScreen
+              Msg.showErrorMsg(context, 'Il codice OTP non corrisponde!');
             }
           }
-        } else {
-          if (mounted) {
-            Msg.showErrorMsg(context, 'Il codice OTP non corrisponde!');
-          }
         }
-      }
-    } catch (e) {
-      if (mounted) {
-        Commons.printIfInDebug(e);
-        Msg.showError(context, e);
+      } catch (e) {
+        if (mounted) {
+          Commons.printIfInDebug(e);
+          Msg.showError(context, e);
+        }
       }
     }
   }
@@ -151,13 +154,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
 
                 // check button
-                ElevatedButton(
+                ElevatedWaitButton(
                   child: const Text('Registrati'),
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      await register();
-                    }
-                  },
+                  onPressed: () async => await register(),
                 ),
               ],
             ),

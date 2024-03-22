@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
-import 'package:cygnus2/ui/base/Clickable.dart';
+import 'package:cygnus2/ui/base/clickable.dart';
 import 'package:cygnus2/ui/mad/icon_chip.dart';
 import 'package:cygnus2/ui/mad/mad_screen.dart';
 import 'package:cygnus2/ui/mad/my_profile_picture.dart';
