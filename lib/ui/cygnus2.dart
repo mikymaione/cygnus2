@@ -60,27 +60,37 @@ class _Cygnus2State extends State<Cygnus2> {
             : StreamBuilder<ProfileData>(
                 stream: storeAuth.loadMyProfile(storeAuth.currentUser?.uid ?? snapAuth.requireData!.uid),
                 builder: (context, snapProfile) => !snapProfile.hasData
-                    ? const EmptyHomePage()
+                    ? EmptyHomePage(
+                        label: 'Caricamento autenticazione…',
+                        icon: Icons.badge,
+                        snapshot: snapProfile,
+                      )
                     : StreamBuilder<Iterable<Blocked>>(
                         stream: storeBlocked.loadBlockedByMe(snapProfile.data?.idFirebase),
                         builder: (context, snapBlockedByMe) => !snapBlockedByMe.hasData
-                            ? const EmptyHomePage()
+                            ? EmptyHomePage(
+                                label: 'Caricamento profilo…',
+                                icon: Icons.person,
+                                snapshot: snapBlockedByMe,
+                              )
                             : StreamBuilder<Iterable<Blocked>>(
                                 stream: storeBlocked.loadHaveBlockedMe(snapProfile.data?.idFirebase),
                                 builder: (context, snapHaveBlockedMe) => !snapHaveBlockedMe.hasData
-                                    ? const EmptyHomePage()
+                                    ? EmptyHomePage(
+                                        label: 'Caricamento rete…',
+                                        icon: Icons.lan,
+                                        snapshot: snapHaveBlockedMe,
+                                      )
                                     : StreamBuilder<MadData?>(
                                         stream: storeMad.getMad(snapProfile.data?.idFirebase),
-                                        builder: (context, snapMyMad) => !snapMyMad.hasData
-                                            ? const EmptyHomePage()
-                                            : MyHomePage(
-                                                myProfile: MyData(
-                                                  madData: snapMyMad.data,
-                                                  profileData: snapProfile.data,
-                                                  blockedByMe: snapBlockedByMe.data,
-                                                  blockedMe: snapHaveBlockedMe.data,
-                                                ),
-                                              ),
+                                        builder: (context, snapMyMad) => MyHomePage(
+                                          myProfile: MyData(
+                                            madData: snapMyMad.data,
+                                            profileData: snapProfile.data,
+                                            blockedByMe: snapBlockedByMe.data,
+                                            blockedMe: snapHaveBlockedMe.data,
+                                          ),
+                                        ),
                                       ),
                               ),
                       ),

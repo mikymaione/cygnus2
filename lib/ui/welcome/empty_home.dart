@@ -10,27 +10,42 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:flutter/material.dart';
 
-class EmptyHomePage extends StatefulWidget {
-  const EmptyHomePage({super.key});
+class EmptyHomePage<Z> extends StatefulWidget {
+  final AsyncSnapshot<Z> snapshot;
+  final String label;
+  final IconData icon;
+
+  const EmptyHomePage({
+    super.key,
+    required this.snapshot,
+    required this.label,
+    required this.icon,
+  });
 
   @override
-  State<EmptyHomePage> createState() => _EmptyHomePageState();
+  State<EmptyHomePage<Z>> createState() => _EmptyHomePageState<Z>();
 }
 
-class _EmptyHomePageState extends State<EmptyHomePage> {
+class _EmptyHomePageState<Z> extends State<EmptyHomePage<Z>> {
   Future<bool> _onWillPop() async => false;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: const Scaffold(
+      child: Scaffold(
         body: Center(
-          child: NoElement(
-            icon: Icons.lan,
-            message: 'Collegamento alla rete…',
-            iconColor: Colors.pink,
-          ),
+          child: widget.snapshot.hasError
+              ? NoElement(
+                  icon: Icons.error,
+                  message: 'Errore: ${widget.snapshot.error}',
+                  iconColor: Colors.pink,
+                )
+              : NoElement(
+                  icon: widget.icon,
+                  message: widget.label,
+                  iconColor: Colors.pink,
+                ),
         ),
       ),
     );

@@ -51,23 +51,13 @@ class _WelcomeState extends State<Welcome> {
                 children: const [
                   WelcomeContentCard(
                     isLastPage: false,
-                    imgUrl: 'assets/images/dev.png',
-                    text: 'Benvenuto in Cygnus2, il social network per le collaborazioni. Cygnus2 nasce dalla volontà di mettere in contatto persone che vogliono collaborare tra loro.',
-                  ),
-                  WelcomeContentCard(
-                    isLastPage: false,
-                    imgUrl: 'assets/images/clean.png',
-                    text: 'Condividi con gli altri le tue capacità e le tue disponibilità.',
-                  ),
-                  WelcomeContentCard(
-                    isLastPage: false,
-                    imgUrl: 'assets/images/chair.png',
-                    text: 'Oppure cerca chi possa aiutarti con le tue necessità.',
+                    imgUrl: 'assets/images/all.png',
+                    text: 'Benvenuto in Cygnus2, il social network per fare nuove amicizie.',
                   ),
                   WelcomeContentCard(
                     isLastPage: true,
-                    imgUrl: 'assets/images/all.png',
-                    text: 'Per entrare a far parte di Cygnus2 leggi e accetta i "termini e condizioni" e la "politica sulla riservatezza".',
+                    imgUrl: 'assets/images/dev.png',
+                    text: 'Per entrare a far parte della community leggi e accetta i "termini e condizioni" e la "politica sulla riservatezza".',
                   ),
                 ],
               ),
@@ -84,7 +74,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
 
                 // status dots
-                for (var x = 0; x < 4; x++) ...[
+                for (var x = 0; x < 2; x++) ...[
                   Container(
                     margin: const EdgeInsets.all(3),
                     width: 10,
@@ -99,7 +89,7 @@ class _WelcomeState extends State<Welcome> {
                 // next button
                 IconButton(
                   icon: const Icon(Icons.arrow_circle_right_outlined),
-                  onPressed: activePage == 3 ? null : () => controller.jumpToPage(activePage + 1),
+                  onPressed: activePage == 1 ? null : () => controller.jumpToPage(activePage + 1),
                 ),
               ],
             ),
