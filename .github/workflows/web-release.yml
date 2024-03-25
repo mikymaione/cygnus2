@@ -1,0 +1,65 @@
+name: Web Release
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Create Web Build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "12.x"
+          cache: gradle
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19.3"
+          channel: "stable"
+          cache: true
+
+      - name: Flutter pub get
+        run: |
+          flutter config --enable-web
+          flutter pub get
+
+      - name: Install Firebase
+        run: npm install -g firebase-tools
+
+      - name: Activate Flutter Fire
+        run: dart pub global activate flutterfire_cli
+
+      - name: Configure Flutter Fire
+        run: flutterfire configure --token "$FIREBASE_TOKEN" --project=cygnus2-social --platforms=android,ios,web --web-app-id=it.maionemiky.cygnus2 --macos-bundle-id=it.maionemiky.cygnus2 --ios-bundle-id=it.maionemiky.cygnus2 --android-package-name=it.maionemiky.cygnus2 -y
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Build .g files
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - name: Flutter Web Release Build
+        run: flutter build web --release
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
