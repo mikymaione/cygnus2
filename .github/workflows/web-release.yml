@@ -55,7 +55,7 @@ jobs:
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
       - name: Flutter Web Release Build
-        run: flutter build web --release --web-renderer canvaskit
+        run: flutter build web --release --web-renderer canvaskit --base-href "/cygnus2/"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
