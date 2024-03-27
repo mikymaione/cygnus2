@@ -34931,7 +34931,7 @@ if(a!=null)if(A.bfM(a)){s=a.split("@")
 if(s.length===2){r=s[1].toLowerCase()
 for(q=$.baH(),q=A.cW(q,q.r,A.f(q).c),p=r.length,o=q.$ti.c;q.v();){n=q.d
 if(n==null)n=o.a(n)
-if(A.D5(r,n,0))return null}}}return"Si prega di usare un indirizzo PEC o universitario!"},
+if(A.D5(r,n,0))return null}}}return"Si prega di usare un indirizzo email universitario!"},
 bkN(a){var s,r,q
 if(a!=null)try{r=B.fu.e_(a)
 return r}catch(q){s=A.a7(q)}return null},
@@ -132396,7 +132396,7 @@ r($,"bve","wG",()=>new A.axI())
 r($,"bvf","wH",()=>new A.axH())
 s($,"bvS","m8",()=>new A.aEg())
 s($,"bvQ","b_b",()=>new A.Bi(A.fK(A.a(["profile","chat"],t.s),t.N),A.a1("Bi<j>")))
-s($,"bwg","baH",()=>A.cB(["pec-email.com","intefreepec.it","postecert.poste.it","sicurezzapostale.it","peceasy.it","peceasy.com","ig-trustmail.com","pec.intesa.it","pec.trustedmail.intesa.it","pec.actalis.it","digpec.it","legalmail.it","pec.it","postacertificata.email","postacert.cedacri.it","postacertificata.notariato.it","pec.notariato.it","pec.unina.it.","ateneo.univr.it","gssi.it","hunimed.eu","imtlucca.it","iuav.it","iulm.it","iusspavia.it","liuc.it","luiss.it","lum.it","lumsa.it","poliba.it ","polimi.it","polito.it","santannapisa.it","sissa.it","sns.it","strutture.univaq.it","uniba.it","unibas.it","unibg.it","unibo.it","unibocconi.it","unibs.it","unibz.it","unica.it ","unical.it ","unicam.it","unicampania.it","unicampus.it","unicas.it","unicatt.it","unich.it","unict.it","unicz.it","unife.it","unifg.it","unifi.it","unige.it","unikore.it","unilink.it","unimc.it","unime.it","unimi.it","unimib.it","unimol.it","unimore.it","unina.it","uninsubria.it","unint.eu","unior.it","unipa.it","uniparthenope.it","unipd.it","unipg.it","unipi.it","unipr.it","unipv.it","unirc.it","uniroma1.it","uniroma2.it","uniroma3.it","uniroma4.it","unisa.it","unisalento.it","unisannio.it","unisg.it","unisi.it","unisob.na.it","unisr.it","uniss.it","unistrapg.it","unistrasi.it","unite.it","unitn.it","unito.it","units.it","unitus.it","uniud.it","uniupo.it","uniurb.it","univda.it","unive.it","univpm.it"],t.N))
+s($,"bwg","baH",()=>A.cB(["ateneo.univr.it","gssi.it","hunimed.eu","imtlucca.it","iuav.it","iulm.it","iusspavia.it","liuc.it","luiss.it","lum.it","lumsa.it","poliba.it ","polimi.it","polito.it","santannapisa.it","sissa.it","sns.it","strutture.univaq.it","uniba.it","unibas.it","unibg.it","unibo.it","unibocconi.it","unibs.it","unibz.it","unica.it ","unical.it ","unicam.it","unicampania.it","unicampus.it","unicas.it","unicatt.it","unich.it","unict.it","unicz.it","unife.it","unifg.it","unifi.it","unige.it","unikore.it","unilink.it","unimc.it","unime.it","unimi.it","unimib.it","unimol.it","unimore.it","unina.it","uninsubria.it","unint.eu","unior.it","unipa.it","uniparthenope.it","unipd.it","unipg.it","unipi.it","unipr.it","unipv.it","unirc.it","uniroma1.it","uniroma2.it","uniroma3.it","uniroma4.it","unisa.it","unisalento.it","unisannio.it","unisg.it","unisi.it","unisob.na.it","unisr.it","uniss.it","unistrapg.it","unistrasi.it","unite.it","unitn.it","unito.it","units.it","unitus.it","uniud.it","uniupo.it","uniurb.it","univda.it","unive.it","univpm.it"],t.N))
 s($,"buq","QI",()=>new A.I())
 s($,"bv2","b_5",()=>new A.I())
 s($,"bv3","b_6",()=>new A.I())
