@@ -102,16 +102,16 @@ class _MadListFilteredState extends State<MadListFiltered> {
             builder: (context, snapshot) {
               final items = sortMads(snapshot.data);
 
-              return items.isEmpty
-                  ? NoElement(
-                      icon: Icons.explore,
-                      iconColor: Colors.blue,
-                      message: 'Nessun profilo trovato per i filtri applicati',
-                      onClickText: 'Modifica i filtri per la ricerca',
-                      onClick: () => showFilters(snapFilter.data),
-                    )
-                  : Expanded(
-                      child: Scrollbar(
+              return Expanded(
+                child: items.isEmpty
+                    ? NoElement(
+                        icon: Icons.explore,
+                        iconColor: Colors.blue,
+                        message: 'Nessun profilo trovato per i filtri applicati',
+                        onClickText: 'Modifica i filtri per la ricerca',
+                        onClick: () => showFilters(snapFilter.data),
+                      )
+                    : Scrollbar(
                         thumbVisibility: true,
                         controller: scrollController,
                         child: ListView.builder(
@@ -123,7 +123,7 @@ class _MadListFilteredState extends State<MadListFiltered> {
                           ),
                         ),
                       ),
-                    );
+              );
             },
           ),
         ],
