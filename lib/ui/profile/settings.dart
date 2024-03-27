@@ -227,7 +227,7 @@ class _SettingsState extends State<Settings> {
                   const SizedBox(height: 16),
 
                   Image.asset(
-                    'assets/icon/MAD.png',
+                    'assets/icon/cygnu2.png',
                     width: 50.0,
                     height: 50.0,
                     fit: BoxFit.cover,
