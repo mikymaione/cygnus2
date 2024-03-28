@@ -45,11 +45,11 @@ class _ProfileEditState extends State<ProfileEdit> {
 
     final currentUser = storeAuth.currentUser;
 
-    cSurname.text = widget.myProfile.profileData!.surname;
-    cName.text = widget.myProfile.profileData!.name;
+    cSurname.text = widget.myProfile.profileData?.surname ?? '';
+    cName.text = widget.myProfile.profileData?.name ?? '';
 
     if (currentUser != null) {
-      cEmail.text = storeAuth.currentUser!.email!;
+      cEmail.text = currentUser.email ?? '';
     }
   }
 
@@ -159,7 +159,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               // Email
               TextEditor(
                 label: 'Email',
-                required: true,
+                required: false,
                 controller: cEmail,
                 readOnly: true,
               ),
