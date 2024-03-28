@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/ui/base/elevated_wait_button.dart';
+import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:cygnus2/utility/location_service.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _LocationEditorState extends State<LocationEditor> {
     description = widget.controllerA.value;
   }
 
-  Future<String?> getDescription(GeoFirePoint l) async {
+  Future<String> getDescription(GeoFirePoint l) async {
     final maybeAddress = await locationService.addressByGeoPoint(l.geopoint);
 
     if (maybeAddress != null) {
@@ -70,19 +71,25 @@ class _LocationEditorState extends State<LocationEditor> {
       widget.controllerA.value = null;
     });
 
-    final l = await locationService.getCurrentLocation();
-    final a = await getDescription(l);
+    try {
+      final l = await locationService.getCurrentLocation();
+      final a = await getDescription(l);
 
-    setState(() {
-      widget.controller.value = l;
-      widget.controllerA.value = a;
+      setState(() {
+        widget.controller.value = l;
+        widget.controllerA.value = a;
 
-      description = a;
+        description = a;
 
-      formFieldState.didChange(somethingSelected);
+        formFieldState.didChange(somethingSelected);
 
-      loading = false;
-    });
+        loading = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        Msg.showError(context, e);
+      }
+    }
   }
 
   @override
