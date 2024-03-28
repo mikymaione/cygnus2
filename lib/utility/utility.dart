@@ -105,6 +105,16 @@ class Utility {
     'univpm.it',
   };
 
+  static String? validateEmailNormal(String? email) {
+    if (email != null) {
+      if (EmailValidator.validate(email)) {
+        return null;
+      }
+    }
+
+    return "Si prega di usare un indirizzo email valido!";
+  }
+
   static String? validateEmail(String? email) {
     if (email != null) {
       // gennaro.esposito@studenti.unina.it
