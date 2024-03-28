@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 import 'package:cygnus2/store/store_auth.dart';
+import 'package:cygnus2/store/store_linkedin.dart';
 import 'package:cygnus2/ui/base/elevated_wait_button.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
@@ -55,6 +56,18 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           Msg.showError(context, e);
         }
+      }
+    }
+  }
+
+  Future<void> enterWithLinkedIn() async {
+    final storeLinkedin = StoreLinkedin();
+
+    try {
+      await storeLinkedin.login();
+    } catch (e) {
+      if (mounted) {
+        Msg.showError(context, e);
       }
     }
   }
@@ -138,10 +151,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text('Accedi'),
                     onPressed: () async => await enter(),
                   ),
+                  ElevatedWaitButton(
+                    onPressed: () async => await enterWithLinkedIn(),
+                    child: const Text('Accedi con LinkedIn'),
+                  ),
                   if (storeAuth.currentUser == null) ...[
                     OutlinedButton(
                       child: const Text('Registrati'),
-                      onPressed: () => Commons.navigate(
+                      onPressed: () async => await Commons.navigate<void>(
                         context: context,
                         builder: (context) => const RegisterScreen(),
                       ),

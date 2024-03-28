@@ -11,14 +11,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cygnus2/data_structures/profile_data.dart';
 import 'package:cygnus2/store/base_store.dart';
 import 'package:cygnus2/store/firebase_tables.dart';
+import 'package:cygnus2/store/store_linkedin.dart';
 import 'package:cygnus2/store/store_messages.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/random_generator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 class StoreAuth extends BaseStore {
   //
-
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
   Stream<User?> currentAuthentication() => FirebaseAuth.instance.userChanges();
@@ -80,11 +81,53 @@ class StoreAuth extends BaseStore {
         email: email,
       );
 
+  Future<User?> loginWithToken(String accessToken) async {
+    final result = await FirebaseAuth.instance.signInWithCustomToken(accessToken);
+
+    return result.user;
+  }
+
   Future<User?> login(String email, String password) async {
     final result = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    return result.user;
+  }
+
+  Future<void> createLinkedinUser() async {
+    final storeLinkedin = StoreLinkedin();
+
+    Commons.printIfInDebug('Current URI: ${Uri.base}');
+
+    final authorizationCodeFromStep2Response = storeLinkedin.getAuthorizationCodeFromStep2Response(Uri.base);
+    Commons.printIfInDebug('authorizationCodeFromStep2Response: $authorizationCodeFromStep2Response');
+
+    final accessToken = await storeLinkedin.getAccessToken(authorizationCodeFromStep2Response);
+    Commons.printIfInDebug('accessToken: $accessToken');
+
+    final userInfo = await storeLinkedin.userInfo(accessToken);
+    Commons.printIfInDebug('userInfo: $userInfo');
+
+    final maybeUser = await _createAnonymousUser();
+
+    if (maybeUser == null) {
+      throw Exception("Non sono riuscito a creare l'utente!");
+    } else {
+      final profileData = ProfileData(
+        idFirebase: maybeUser.uid,
+        created: DateTime.now(),
+        surname: userInfo.surname,
+        name: userInfo.name,
+      );
+
+      await saveProfile(profileData);
+    }
+  }
+
+  Future<User?> _createAnonymousUser() async {
+    final result = await FirebaseAuth.instance.signInAnonymously();
 
     return result.user;
   }

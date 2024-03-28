@@ -17,6 +17,7 @@ import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/welcome/empty_home.dart';
 import 'package:cygnus2/ui/welcome/home.dart';
 import 'package:cygnus2/ui/welcome/welcome.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,14 +30,26 @@ class Cygnus2 extends StatefulWidget {
 }
 
 class _Cygnus2State extends State<Cygnus2> {
+  final storeAuth = StoreAuth();
+  final storeMad = StoreMad();
+  final storeBlocked = StoreBlocked();
+
+  Future<User?> createLinkedinUser() async {
+    try {
+      await storeAuth.createLinkedinUser();
+    } catch (e) {
+      Commons.printIfInDebug('"createLinkedinUser" Error: $e');
+    }
+
+    return null;
+  }
+
+  Stream<User?> currentAuthentication() => storeAuth.currentUser == null ? Stream.fromFuture(createLinkedinUser()) : storeAuth.currentAuthentication();
+
   @override
   Widget build(BuildContext context) {
-    final storeAuth = StoreAuth();
-    final storeMad = StoreMad();
-    final storeBlocked = StoreBlocked();
-
     return StreamBuilder<User?>(
-      stream: storeAuth.currentAuthentication(),
+      stream: currentAuthentication(),
       builder: (context, snapAuth) => MaterialApp(
         title: 'Cygnus2',
         debugShowCheckedModeBanner: false,
