@@ -41,6 +41,7 @@ dependencies:
   nominatim_geocoding: ^0.0.6
   package_info_plus: ^6.0.0
   recase: ^4.1.0
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
