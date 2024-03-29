@@ -136,6 +136,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               // Surname
               TextEditor(
                 label: 'Cognome',
+                autofillHints: const [AutofillHints.familyName],
                 required: true,
                 minLength: 2,
                 maxLength: 100,
@@ -148,6 +149,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               // Nome
               TextEditor(
                 label: 'Nome',
+                autofillHints: const [AutofillHints.givenName],
                 required: true,
                 minLength: 2,
                 maxLength: 100,
@@ -159,6 +161,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               // Email
               TextEditor(
                 label: 'Email',
+                autofillHints: const [AutofillHints.email],
                 required: false,
                 controller: cEmail,
                 readOnly: true,

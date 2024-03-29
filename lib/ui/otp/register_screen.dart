@@ -17,6 +17,7 @@ import 'package:cygnus2/ui/forms/text_editor.dart';
 import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/utility.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:input_dialog/input_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -109,48 +110,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Surname
-                TextEditor(
-                  label: 'Cognome',
-                  required: true,
-                  minLength: 2,
-                  maxLength: 100,
-                  controller: cSurname,
-                  keyboardType: TextInputType.name,
-                  autofocus: true,
-                  textCapitalization: TextCapitalization.words,
+                AutofillGroup(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Surname
+                      TextEditor(
+                        label: 'Cognome',
+                        autofillHints: const [AutofillHints.familyName],
+                        required: true,
+                        minLength: 2,
+                        maxLength: 100,
+                        controller: cSurname,
+                        keyboardType: TextInputType.name,
+                        autofocus: true,
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                      ),
+
+                      // Nome
+                      TextEditor(
+                        label: 'Nome',
+                        autofillHints: const [AutofillHints.givenName],
+                        required: true,
+                        minLength: 2,
+                        maxLength: 100,
+                        controller: cName,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ],
+                  ),
                 ),
 
-                // Nome
-                TextEditor(
-                  label: 'Nome',
-                  required: true,
-                  minLength: 2,
-                  maxLength: 100,
-                  controller: cName,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                ),
+                AutofillGroup(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Email
+                      TextEditor(
+                        label: 'Email universitaria',
+                        autofillHints: const [AutofillHints.email],
+                        required: true,
+                        minLength: 10,
+                        maxLength: 320,
+                        controller: cEmail,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (email) => Utility.validateEmail(email),
+                        textInputAction: TextInputAction.next,
+                      ),
 
-                // Email
-                TextEditor(
-                  label: 'Email',
-                  required: true,
-                  minLength: 10,
-                  maxLength: 320,
-                  controller: cEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (email) => Utility.validateEmail(email),
-                ),
-
-                // Password
-                TextEditor(
-                  label: 'Password',
-                  required: true,
-                  minLength: 8,
-                  maxLength: 128,
-                  obscureText: true,
-                  controller: cPassword,
+                      // Password
+                      TextEditor(
+                        label: 'Password',
+                        autofillHints: const [AutofillHints.password],
+                        required: true,
+                        minLength: 8,
+                        maxLength: 128,
+                        obscureText: true,
+                        controller: cPassword,
+                        textInputAction: TextInputAction.go,
+                        onEditingComplete: () => TextInput.finishAutofillContext(),
+                      ),
+                    ],
+                  ),
                 ),
 
                 // check button

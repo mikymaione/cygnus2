@@ -17,6 +17,7 @@ import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -107,26 +108,38 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Email
-              TextEditor(
-                label: 'Email',
-                required: true,
-                minLength: 10,
-                maxLength: 320,
-                controller: cEmail,
-                keyboardType: TextInputType.emailAddress,
-                autofocus: true,
-                validator: (email) => Utility.validateEmail(email),
-              ),
+              AutofillGroup(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Email
+                    TextEditor(
+                      label: 'Email',
+                      autofillHints: const [AutofillHints.email],
+                      required: true,
+                      minLength: 10,
+                      maxLength: 320,
+                      controller: cEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
+                      validator: (email) => Utility.validateEmail(email),
+                    ),
 
-              // Password
-              TextEditor(
-                label: 'Password',
-                required: true,
-                minLength: 8,
-                maxLength: 128,
-                obscureText: true,
-                controller: cPassword,
+                    // Password
+                    TextEditor(
+                      label: 'Password',
+                      autofillHints: const [AutofillHints.password],
+                      required: true,
+                      minLength: 8,
+                      maxLength: 128,
+                      obscureText: true,
+                      controller: cPassword,
+                      textInputAction: TextInputAction.go,
+                      onEditingComplete: () => TextInput.finishAutofillContext(),
+                    ),
+                  ],
+                ),
               ),
 
               // check button

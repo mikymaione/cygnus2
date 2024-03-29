@@ -17,9 +17,12 @@ class TextEditor extends StatefulWidget {
   final int minLength;
   final int? maxLength;
   final double? width;
+  final Iterable<String>? autofillHints;
   final bool obscureText, readOnly, autofocus, required;
   final List<TextInputFormatter>? inputFormatters;
+  final VoidCallback? onEditingComplete;
   final GestureTapCallback? onTap;
+  final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
   final FormFieldValidator<String>? validator;
 
@@ -28,6 +31,9 @@ class TextEditor extends StatefulWidget {
     required this.label,
     required this.controller,
     required this.required,
+    this.onEditingComplete,
+    this.textInputAction,
+    this.autofillHints,
     this.validator,
     this.onTap,
     this.keyboardType,
@@ -81,6 +87,7 @@ class _TextEditorState extends State<TextEditor> {
             TextFormField(
               textCapitalization: widget.textCapitalization,
               autofocus: widget.autofocus,
+              autofillHints: widget.autofillHints,
               onTap: widget.onTap,
               readOnly: widget.readOnly,
               controller: widget.controller,
@@ -88,6 +95,8 @@ class _TextEditorState extends State<TextEditor> {
               obscureText: obscure,
               keyboardType: widget.keyboardType,
               inputFormatters: widget.inputFormatters,
+              onEditingComplete: widget.onEditingComplete,
+              textInputAction: widget.textInputAction,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   if (widget.required) {
