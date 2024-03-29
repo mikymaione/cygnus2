@@ -56879,14 +56879,14 @@ A.a2a.prototype={
 H6(){var s=0,r=A.w(t.H)
 var $async$H6=A.r(function(a,b){if(a===1)return A.t(b,r)
 while(true)switch(s){case 0:s=2
-return A.q(A.akx("https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77qerz8x61auw7&redirect_uri=https://mikymaione.github.io/cygnus2/linkedin/&state=logincygnus2&scope=email openid profile",B.aqR),$async$H6)
+return A.q(A.akx("https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77qerz8x61auw7&redirect_uri=https://mikymaione.github.io/cygnus2&state=logincygnus2&scope=email openid profile",B.aqR),$async$H6)
 case 2:return A.u(null,r)}})
 return A.v($async$H6,r)},
 BN(a){return this.a7b(a)},
 a7b(a){var s=0,r=A.w(t.N),q,p,o,n,m
 var $async$BN=A.r(function(b,c){if(b===1)return A.t(c,r)
 while(true)switch(s){case 0:o=t.N
-n=A.Px(null,null,A.aC(["grant_type","authorization_code","code",a,"client_id","77qerz8x61auw7","client_secret","JqO1CFmSjv9K4yCP","redirect_uri","https://mikymaione.github.io/cygnus2/linkedin/"],o,o)).f
+n=A.Px(null,null,A.aC(["grant_type","authorization_code","code",a,"client_id","77qerz8x61auw7","client_secret","JqO1CFmSjv9K4yCP","redirect_uri","https://mikymaione.github.io/cygnus2"],o,o)).f
 s=3
 return A.q(A.b9z(A.f9("https://www.linkedin.com/oauth/v2/accessToken?"+(n==null?"":n),0,null),null,A.aC(["Content-Type","application/x-www-form-urlencoded"],o,o)),$async$BN)
 case 3:m=c
