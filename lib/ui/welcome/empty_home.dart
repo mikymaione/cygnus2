@@ -10,7 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/ui/base/no_element.dart';
 import 'package:flutter/material.dart';
 
-class EmptyHomePage<Z> extends StatefulWidget {
+class EmptyHomePage<Z> extends StatelessWidget {
   final AsyncSnapshot<Z> snapshot;
   final String label;
   final IconData icon;
@@ -23,27 +23,20 @@ class EmptyHomePage<Z> extends StatefulWidget {
   });
 
   @override
-  State<EmptyHomePage<Z>> createState() => _EmptyHomePageState<Z>();
-}
-
-class _EmptyHomePageState<Z> extends State<EmptyHomePage<Z>> {
-  Future<bool> _onWillPop() async => false;
-
-  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: Center(
-          child: widget.snapshot.hasError
+          child: snapshot.hasError
               ? NoElement(
                   icon: Icons.error,
-                  message: 'Errore: ${widget.snapshot.error}',
+                  message: 'Errore: ${snapshot.error}',
                   iconColor: Colors.pink,
                 )
               : NoElement(
-                  icon: widget.icon,
-                  message: widget.label,
+                  icon: icon,
+                  message: label,
                   iconColor: Colors.pink,
                 ),
         ),

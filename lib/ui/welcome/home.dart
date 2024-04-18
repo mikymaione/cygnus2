@@ -49,8 +49,6 @@ extension _TabsNameNameExtension on _TabsName {
 class _MyHomePageState extends State<MyHomePage> {
   var currentTab = _TabsName.explore;
 
-  Future<bool> _onWillPop() async => false;
-
   late final storePushNotifications = StorePushNotifications(
     getContext: () => context,
   );
@@ -76,8 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
       child: DefaultTabController(
         length: tabs,
         child: Scaffold(
