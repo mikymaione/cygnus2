@@ -13,7 +13,7 @@ import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
 import 'package:cygnus2/ui/base/simple_scrollview.dart';
-import 'package:cygnus2/ui/forms/slider_editor.dart';
+import 'package:cygnus2/ui/forms/distance_slider_editor.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -102,7 +102,7 @@ class _MadFiltersState extends State<MadFilters> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // distance
-                SliderEditor(
+                DistanceSliderEditor(
                   controller: cKm,
                 ),
 

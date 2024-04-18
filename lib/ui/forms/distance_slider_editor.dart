@@ -10,19 +10,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
 
-class SliderEditor extends StatefulWidget {
+class DistanceSliderEditor extends StatefulWidget {
   final GenericController<double> controller;
 
-  const SliderEditor({
+  const DistanceSliderEditor({
     super.key,
     required this.controller,
   });
 
   @override
-  State<SliderEditor> createState() => _SliderEditorState();
+  State<DistanceSliderEditor> createState() => _DistanceSliderEditorState();
 }
 
-class _SliderEditorState extends State<SliderEditor> {
+class _DistanceSliderEditorState extends State<DistanceSliderEditor> {
   int get curValue => widget.controller.value?.ceil() ?? 1;
 
   late int kmInTitle = curValue;
