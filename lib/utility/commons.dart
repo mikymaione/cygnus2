@@ -13,6 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Commons {
+  static const minAge = 18.0;
+  static const maxAge = 130.0;
+
+  static const defaultAge = RangeValues(minAge, maxAge);
+
   static printIfInDebug(Object? s) {
     if (kDebugMode) {
       print(s);

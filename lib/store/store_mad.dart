@@ -130,10 +130,12 @@ class StoreMad extends BaseStore {
               )
               .whereNotNull()
               .where(
-                (mad) => myId != mad.personId,
+                (mad) => _filterMad(myId, mad, filter),
               ),
         );
   }
+
+  bool _filterMad(String myId, MadData mad, MadFilter filter) => myId != mad.personId && filter.isInAgeRange(mad.age);
 
   Stream<Iterable<MadData>> searchMads(String? myId, MadFilter? filter, GeoFirePoint? myLocation, double radius) {
     if (myId == null || myLocation == null) {

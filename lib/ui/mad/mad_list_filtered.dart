@@ -86,6 +86,11 @@ class _MadListFilteredState extends State<MadListFiltered> {
                       label: Text('${snapFilter.data!.km!}km'),
                     ),
                   ],
+                  if (snapFilter.data?.ageRange != null) ...[
+                    Chip(
+                      label: Text('${snapFilter.data!.ageRange!} anni'),
+                    ),
+                  ],
                 ],
               ),
             ),

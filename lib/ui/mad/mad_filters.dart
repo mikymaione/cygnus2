@@ -13,6 +13,7 @@ import 'package:cygnus2/store/store_filter.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/base/screen.dart';
 import 'package:cygnus2/ui/base/simple_scrollview.dart';
+import 'package:cygnus2/ui/forms/age_slider_editor.dart';
 import 'package:cygnus2/ui/forms/distance_slider_editor.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
 import 'package:flutter/material.dart';
@@ -35,17 +36,20 @@ class _MadFiltersState extends State<MadFilters> {
   final formKey = GlobalKey<FormState>();
 
   final cKm = GenericController<double>();
+  final cAge = GenericController<RangeValues>();
 
   @override
   void initState() {
     super.initState();
 
     cKm.value = widget.filters?.km?.toDouble();
+    cAge.value = widget.filters?.ageRangeValues;
   }
 
   @override
   void dispose() {
     cKm.dispose();
+    cAge.dispose();
 
     super.dispose();
   }
@@ -70,7 +74,9 @@ class _MadFiltersState extends State<MadFilters> {
     final f = MadFilter(
       idFirebase: widget.myProfile.profileData?.idFirebase,
       cleared: true,
-      km: cKm.value?.ceil(),
+      km: null,
+      ageFrom: null,
+      ageTo: null,
     );
 
     save(f);
@@ -82,6 +88,8 @@ class _MadFiltersState extends State<MadFilters> {
         idFirebase: widget.myProfile.profileData?.idFirebase,
         cleared: false,
         km: cKm.value?.ceil(),
+        ageFrom: cAge.value?.start.floor(),
+        ageTo: cAge.value?.end.ceil(),
       );
 
       save(f);
@@ -104,6 +112,11 @@ class _MadFiltersState extends State<MadFilters> {
                 // distance
                 DistanceSliderEditor(
                   controller: cKm,
+                ),
+
+                // age
+                AgeSliderEditor(
+                  controller: cAge,
                 ),
 
                 // save button
