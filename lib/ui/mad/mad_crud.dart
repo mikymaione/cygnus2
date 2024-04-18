@@ -10,13 +10,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import 'package:cygnus2/data_structures/image_data.dart';
 import 'package:cygnus2/data_structures/mad_data.dart';
 import 'package:cygnus2/data_structures/my_data.dart';
+import 'package:cygnus2/store/store_auth.dart';
 import 'package:cygnus2/store/store_mad.dart';
 import 'package:cygnus2/ui/base/elevated_wait_button.dart';
 import 'package:cygnus2/ui/base/msg.dart';
 import 'package:cygnus2/ui/forms/date_editor.dart';
 import 'package:cygnus2/ui/forms/location_editor.dart';
 import 'package:cygnus2/ui/forms/text_editor.dart';
+import 'package:cygnus2/ui/forms/university_editor.dart';
+import 'package:cygnus2/utility/commons.dart';
 import 'package:cygnus2/utility/generic_controller.dart';
+import 'package:cygnus2/utility/required_generic_controller.dart';
+import 'package:cygnus2/utility/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 
@@ -78,14 +83,19 @@ class MadCrud extends StatefulWidget {
 }
 
 class _MadCrudState extends State<MadCrud> {
+  //
+  String? get university => Utility.getUniversityByEmail(storeAuth.currentUser?.email);
+
   final formKey = GlobalKey<FormState>();
+
+  final storeAuth = StoreAuth();
 
   final cNickname = TextEditingController();
 
   final cBirthday = GenericController<DateTime>();
   final cBio = TextEditingController();
 
-  final cUniversity = TextEditingController();
+  late final cUniversity = RequiredGenericController<String>(university!);
   final cDepartment = TextEditingController();
 
   final cLocation = GenericController<GeoFirePoint>();
@@ -101,7 +111,6 @@ class _MadCrudState extends State<MadCrud> {
     cBirthday.value = widget.mad?.birthday;
     cBio.text = widget.mad?.bio ?? '';
 
-    cUniversity.text = widget.mad?.university ?? '';
     cDepartment.text = widget.mad?.department ?? '';
 
     cLocation.value = widget.mad?.geoFirePoint;
@@ -114,7 +123,6 @@ class _MadCrudState extends State<MadCrud> {
     cBirthday.dispose();
     cBio.dispose();
 
-    cUniversity.dispose();
     cDepartment.dispose();
 
     cLocation.dispose();
@@ -131,7 +139,7 @@ class _MadCrudState extends State<MadCrud> {
           nickname: cNickname.text,
           birthday: cBirthday.value!,
           bio: cBio.text,
-          university: cUniversity.text,
+          university: cUniversity.value,
           department: cDepartment.text,
           location: cLocation.value!.data,
           address: cAddress.value!,
@@ -158,8 +166,8 @@ class _MadCrudState extends State<MadCrud> {
   Widget build(BuildContext context) {
     final languageCode = Localizations.localeOf(context).languageCode;
 
-    final years100 = DateTime.now().subtract(const Duration(days: 365 * 100));
-    final years18 = DateTime.now().subtract(const Duration(days: 365 * 18));
+    final years100 = DateTime.now().subtract(const Duration(days: 365 * Commons.maxAgeI));
+    final years18 = DateTime.now().subtract(const Duration(days: 365 * Commons.minAgeI));
 
     return Form(
       key: formKey,
@@ -189,13 +197,9 @@ class _MadCrudState extends State<MadCrud> {
           const SizedBox(height: 16),
 
           // University
-          TextEditor(
+          UniversityEditor(
             label: 'Università',
             controller: cUniversity,
-            required: !widget.readOnly,
-            minLength: 5,
-            maxLength: 500,
-            readOnly: widget.readOnly,
           ),
 
           // Department
@@ -228,10 +232,15 @@ class _MadCrudState extends State<MadCrud> {
           // save button
           if (!widget.readOnly) ...[
             const SizedBox(height: 32),
-            ElevatedWaitButton(
-              onPressed: () async => await save(),
-              child: const Text('Salva'),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedWaitButton(
+                  onPressed: () async => await save(),
+                  child: const Text('Salva'),
+                ),
+              ],
+            )
           ],
         ],
       ),

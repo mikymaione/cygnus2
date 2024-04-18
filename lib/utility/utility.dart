@@ -18,7 +18,7 @@ import 'package:intl/intl.dart';
 
 class Utility {
   //
-  static final Set<String> _domains = {
+  static final Set<String> universities = {
     'ateneo.univr.it',
     'gssi.it',
     'hunimed.eu',
@@ -115,7 +115,9 @@ class Utility {
     return "Si prega di usare un indirizzo email valido!";
   }
 
-  static String? validateEmail(String? email) {
+  static String? validateEmail(String? email) => getUniversityByEmail(email) == null ? "Si prega di usare un indirizzo email universitario!" : null;
+
+  static String? getUniversityByEmail(String? email) {
     if (email != null) {
       // gennaro.esposito@studenti.unina.it
       if (EmailValidator.validate(email)) {
@@ -127,16 +129,16 @@ class Utility {
           // studenti.unina.it
           final domain = emailParts[1].toLowerCase();
 
-          for (final d in _domains) {
+          for (final d in universities) {
             if (domain.contains(d)) {
-              return null;
+              return d;
             }
           }
         }
       }
     }
 
-    return "Si prega di usare un indirizzo email universitario!";
+    return null;
   }
 
   static DateTime todayOnlyDate() => toOnlyDate(DateTime.now());
